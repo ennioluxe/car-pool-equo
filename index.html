@@ -172,6 +172,8 @@ async function avvia(){
 
     creaGriglia();
 
+    caricaStorico();
+
 }
 
 function creaGriglia(){
@@ -482,6 +484,68 @@ document
 document
 .getElementById("salva")
 .disabled = true;
+
+    }
+
+}
+
+    async function caricaStorico(){
+
+    try{
+
+        const storico =
+        await fetch(
+            API + "?action=storico"
+        ).then(r=>r.json());
+
+        let html = "";
+
+        storico
+        .slice()
+        .reverse()
+        .forEach(r=>{
+
+            html += `
+
+            <div class="rigaStorico">
+
+                <b>${r.data}</b>
+
+                <br>
+
+                Presenti:
+                ${r.presenti.join(", ")}
+
+                <br>
+
+                Autista:
+                ${r.autista}
+
+            </div>
+
+            `;
+
+        });
+
+        if(html===""){
+
+            html =
+            "Nessuna giornata registrata";
+
+        }
+
+        document
+        .getElementById("storico")
+        .innerHTML = html;
+
+    }
+
+    catch(err){
+
+        document
+        .getElementById("storico")
+        .innerHTML =
+        "Errore caricamento storico";
 
     }
 
