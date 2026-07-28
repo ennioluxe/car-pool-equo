@@ -901,12 +901,27 @@ async function eliminaTurno(id){
     .querySelector("details")
     .open = true;
 
-    document
-    .getElementById(
-        "dataStorico"
-    ).value =
-    turno.data
-    .substring(0,10);
+   const dataOriginale =
+new Date(turno.data);
+
+const yyyy =
+dataOriginale.getUTCFullYear();
+
+const mm =
+String(
+    dataOriginale.getUTCMonth() + 1
+).padStart(2,"0");
+
+const dd =
+String(
+    dataOriginale.getUTCDate()
+).padStart(2,"0");
+
+document
+.getElementById(
+    "dataStorico"
+).value =
+`${yyyy}-${mm}-${dd}`;
 
     preparaStorico();
 
