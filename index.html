@@ -301,7 +301,11 @@ function suggerisci(){
 
                 punti:
                 statistiche[nome]
-                .punteggio
+                .punteggio,
+
+                ultima:
+                statistiche[nome]
+                .ultimaGuida || ""
 
             });
 
@@ -328,24 +332,40 @@ function suggerisci(){
         return;
     }
 
-    candidati.sort(
-        (a,b)=>
-        b.punti-a.punti
-    );
+    candidati.sort((a,b)=>{
+
+        if(
+            b.punti !== a.punti
+        ){
+            return b.punti - a.punti;
+        }
+
+        return a.ultima.localeCompare(
+            b.ultima
+        );
+
+    });
 
     let migliore =
-    candidati[0].nome;
+    candidati[0];
 
     document
     .getElementById(
         "nomeAutista"
     )
-    .innerText =
-    migliore;
+    .innerHTML =
+
+    migliore.nome +
+
+    "<br>(" +
+
+    migliore.punti +
+
+    ")";
 
     document
     .getElementById(
-        "c_" + migliore
+        "c_" + migliore.nome
     )
     .classList.add(
         "suggerito"
