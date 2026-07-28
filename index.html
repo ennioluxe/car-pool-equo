@@ -429,11 +429,26 @@ async function salvaGiornata(){
 
     catch(err){
 
-        alert(
-        "Errore durante il salvataggio"
-        );
+       alert(
+"Giornata salvata"
+);
 
-        console.error(err);
+statistiche =
+await fetch(
+    API + "?action=statistiche"
+).then(r=>r.json());
+
+stato = {};
+
+creaGriglia();
+
+document
+.getElementById("nomeAutista")
+.innerText = "-";
+
+document
+.getElementById("salva")
+.disabled = true;
 
     }
 
