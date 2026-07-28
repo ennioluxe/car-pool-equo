@@ -195,14 +195,38 @@ function creaGriglia(){
     .getElementById("griglia")
     .innerHTML = html;
 
-}
-
 function clic(nome){
 
-    stato[nome]++;
+    let attuale = stato[nome];
 
-    if(stato[nome] > 2)
+    if(attuale === 0){
+
+        stato[nome] = 1;
+
+    }
+
+    else if(attuale === 1){
+
+        Object.keys(stato)
+        .forEach(n=>{
+
+            if(stato[n]===2){
+
+                stato[n]=1;
+
+            }
+
+        });
+
+        stato[nome] = 2;
+
+    }
+
+    else{
+
         stato[nome] = 0;
+
+    }
 
     aggiorna();
 
