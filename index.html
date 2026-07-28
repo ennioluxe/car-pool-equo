@@ -152,6 +152,20 @@ button{
 
 </div>
 
+<details class="card">
+
+    <summary>
+        📜 Storico e giornate passate
+    </summary>
+
+    <br>
+
+    <div id="storico">
+        Caricamento storico...
+    </div>
+
+</details>
+
 <script>
 
 const API =
@@ -477,10 +491,12 @@ stato = {};
 
 creaGriglia();
 
+caricaStorico();
+
 document
 .getElementById("nomeAutista")
 .innerText = "-";
-        caricaStorico();
+       
 
 document
 .getElementById("salva")
