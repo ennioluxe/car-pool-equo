@@ -751,16 +751,20 @@ async function salvaGiornataPassata(){
         }
     );
 
-    alert(
-        "Giornata passata salvata"
-    );
+   alert(
+    "Giornata passata salvata"
+);
 
-    statistiche =
-    await fetch(
-        API + "?action=statistiche"
-    ).then(r=>r.json());
-    
-    caricaStorico();
+statistiche =
+await fetch(
+    API + "?action=statistiche"
+).then(r=>r.json());
+
+caricaStorico();
+
+document
+.getElementById("grigliaStorico")
+.innerHTML = "";
 }
     
 avvia();
