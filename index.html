@@ -468,17 +468,7 @@ async function salvaGiornata(){
             }
         );
 
-        alert(
-        "Giornata salvata"
-        );
-
-        location.reload();
-
-    }
-
-    catch(err){
-
-       alert(
+alert(
 "Giornata salvata"
 );
 
@@ -496,13 +486,22 @@ caricaStorico();
 document
 .getElementById("nomeAutista")
 .innerText = "-";
-       
 
 document
 .getElementById("salva")
 .disabled = true;
 
-    }
+}
+
+catch(err){
+
+    alert(
+    "Errore durante il salvataggio"
+    );
+
+    console.error(err);
+
+}
 
 }
 
