@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
 <title>Car Pool Equo</title>
 
@@ -21,8 +23,8 @@ h1{
 
 .card{
     background:white;
-    padding:15px;
     border-radius:12px;
+    padding:15px;
     margin-bottom:15px;
     box-shadow:0 2px 6px rgba(0,0,0,.15);
 }
@@ -33,25 +35,76 @@ h1{
     gap:10px;
 }
 
-.lavoratore{
-    border:2px solid #ccc;
+.collega{
+    border:3px solid #ccc;
     border-radius:12px;
     padding:15px;
     text-align:center;
+    cursor:pointer;
+    user-select:none;
+    transition:.2s;
+}
+
+.assente{
+    background:white;
+}
+
+.presente{
+    background:#28a745;
+    color:white;
+}
+
+.autista{
+    background:#dc3545;
+    color:white;
+}
+
+.suggerito{
+    border-color:red !important;
 }
 
 .nome{
-    font-size:20px;
+    font-size:22px;
     font-weight:bold;
 }
 
-.punteggio{
-    font-size:16px;
-    margin-top:5px;
-    color:#666;
+.punti{
+    margin-top:8px;
+    font-size:18px;
+}
+
+#autistaSuggerito{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+#nomeAutista{
+    color:red;
+    font-size:34px;
+    font-weight:bold;
+}
+
+button{
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#0078d4;
+    color:white;
+    cursor:pointer;
+}
+
+#salva{
+    width:100%;
+    margin-top:20px;
+    font-size:18px;
+}
+
+#salva:disabled{
+    background:#999;
 }
 
 </style>
+
 </head>
 
 <body>
@@ -60,18 +113,31 @@ h1{
 
 <div class="card">
 
-<h2>Test collegamento Google Sheet</h2>
+    <p>
+    Data:
+    <input type="date" id="data">
+    </p>
 
-<p>
-Se vedi Mario, Luca, Anna e Paolo,
-il collegamento funziona.
-</p>
+    <div id="autistaSuggerito">
 
-<div id="colleghi" class="grid">
+        <div>
+        Autista suggerito
+        </div>
 
-Caricamento...
+        <div id="nomeAutista">
+        -
+        </div>
 
-</div>
+    </div>
+
+    <div id="griglia" class="grid">
+    </div>
+
+    <button
+        id="salva"
+        disabled>
+        ✅ Salva Giornata
+    </button>
 
 </div>
 
@@ -80,60 +146,186 @@ Caricamento...
 const API =
 "https://script.google.com/macros/s/AKfycbxP2QpM_PjTQfXsBfmgoYZ1W2Ye-hYkUhMD1zAHhbntUdbbo2KsaobMYO_zG-sjHH32-Q/exec";
 
-async function caricaColleghi(){
+let statistiche = {};
+let stato = {};
 
-    try{
+document.getElementById("data").value =
+new Date().toISOString().split("T")[0];
 
-        const risposta =
-        await fetch(
-            API + "?action=colleghi"
-        );
+async function avvia(){
 
-        const dati =
-        await risposta.json();
+    statistiche =
+    await fetch(
+        API + "?action=statistiche"
+    ).then(r=>r.json());
 
-        let html = "";
-
-        dati.forEach(c => {
-
-            html += `
-            <div class="lavoratore">
-
-                <div class="nome">
-                    ${c.nome}
-                </div>
-
-                <div class="punteggio">
-                    (0)
-                </div>
-
-            </div>
-            `;
-
-        });
-
-        document.getElementById(
-            "colleghi"
-        ).innerHTML = html;
-
-    }
-
-    catch(errore){
-
-        document.getElementById(
-            "colleghi"
-        ).innerHTML =
-        "<b>Errore collegamento API</b>";
-
-        console.error(
-            errore
-        );
-
-    }
+    creaGriglia();
 
 }
 
-caricaColleghi();
+function creaGriglia(){
+
+    let html = "";
+
+    Object.keys(statistiche)
+    .forEach(nome=>{
+
+        stato[nome] = 0;
+
+        html += `
+        <div
+            class="collega assente"
+            id="c_${nome}"
+            onclick="clic('${nome}')">
+
+            <div class="nome">
+                ${nome}
+            </div>
+
+            <div class="punti">
+                (${statistiche[nome].punteggio})
+            </div>
+
+        </div>
+        `;
+
+    });
+
+    document
+    .getElementById("griglia")
+    .innerHTML = html;
+
+}
+
+function clic(nome){
+
+    stato[nome]++;
+
+    if(stato[nome] > 2)
+        stato[nome] = 0;
+
+    aggiorna();
+
+}
+
+function aggiorna(){
+
+    let autistaRosso = false;
+
+    Object.keys(stato)
+    .forEach(nome=>{
+
+        let el =
+        document.getElementById(
+            "c_" + nome
+        );
+
+        el.className =
+        "collega";
+
+        if(stato[nome] == 0){
+
+            el.classList.add(
+                "assente"
+            );
+
+        }
+
+        if(stato[nome] == 1){
+
+            el.classList.add(
+                "presente"
+            );
+
+        }
+
+        if(stato[nome] == 2){
+
+            el.classList.add(
+                "autista"
+            );
+
+            autistaRosso = true;
+        }
+
+    });
+
+    suggerisci();
+
+    document
+    .getElementById("salva")
+    .disabled =
+    !autistaRosso;
+}
+
+function suggerisci(){
+
+    let candidati = [];
+
+    Object.keys(stato)
+    .forEach(nome=>{
+
+        if(stato[nome] > 0){
+
+            candidati.push({
+
+                nome:nome,
+
+                punti:
+                statistiche[nome]
+                .punteggio
+
+            });
+
+        }
+
+    });
+
+    document
+    .querySelectorAll(".collega")
+    .forEach(x =>
+        x.classList.remove(
+            "suggerito"
+        )
+    );
+
+    if(candidati.length === 0){
+
+        document
+        .getElementById(
+            "nomeAutista"
+        )
+        .innerText = "-";
+
+        return;
+    }
+
+    candidati.sort(
+        (a,b)=>
+        b.punti-a.punti
+    );
+
+    let migliore =
+    candidati[0].nome;
+
+    document
+    .getElementById(
+        "nomeAutista"
+    )
+    .innerText =
+    migliore;
+
+    document
+    .getElementById(
+        "c_" + migliore
+    )
+    .classList.add(
+        "suggerito"
+    );
+
+}
+
+avvia();
 
 </script>
 
