@@ -113,6 +113,12 @@ button{
     padding:8px 0;
 }
 
+    #grigliaStorico{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:10px;
+}
 
 </style>
 
@@ -419,7 +425,13 @@ function suggerisci(){
     );
 
 }
-
+document
+.getElementById("salva")
+.addEventListener(
+"click",
+salvaGiornata
+);
+    
 document
 .getElementById("preparaStorico")
 .addEventListener(
@@ -743,6 +755,11 @@ async function salvaGiornataPassata(){
         "Giornata passata salvata"
     );
 
+    statistiche =
+    await fetch(
+        API + "?action=statistiche"
+    ).then(r=>r.json());
+    
     caricaStorico();
 }
     
