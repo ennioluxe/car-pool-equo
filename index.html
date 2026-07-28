@@ -587,7 +587,7 @@ catch(err){
 </button>
 
 <button
-    onclick="eliminaTurno('${r.id}')"
+    onclick="eliminaTurno(${r.id})"
     style="background:#dc3545;">
 
     🗑 Elimina
@@ -813,8 +813,8 @@ caricaStorico();
 document
 .getElementById("grigliaStorico")
 .innerHTML = "";
-}
-async function eliminaTurno(data){
+    
+async function eliminaTurno(id){
 
     const conferma =
     confirm(
@@ -840,7 +840,7 @@ async function eliminaTurno(data){
 
                     tipo:"eliminaTurno",
 
-                    data:data
+                    id:id
 
                 })
 
