@@ -665,6 +665,7 @@ function preparaStorico(){
     document
     .getElementById("grigliaStorico")
     .innerHTML = html;
+    
 }
 
 function clicStorico(nome){
@@ -797,8 +798,10 @@ async function salvaGiornataPassata(){
         }
     );
 
-   alert(
-    "Giornata passata salvata"
+alert(
+    modificaCorrente3    
+    ? "Modifica salvata"
+    : "Giornata passata salvata"
 );
 
 statistiche =
@@ -813,6 +816,8 @@ caricaStorico();
 document
 .getElementById("grigliaStorico")
 .innerHTML = "";
+
+}
     
 async function eliminaTurno(id){
 
