@@ -351,6 +351,94 @@ function suggerisci(){
 
 }
 
+document
+.getElementById("salva")
+.addEventListener(
+"click",
+salvaGiornata
+);
+
+async function salvaGiornata(){
+
+    let presenti = [];
+
+    let autista = null;
+
+    Object.keys(stato)
+    .forEach(nome=>{
+
+        if(stato[nome] > 0){
+
+            presenti.push(nome);
+
+        }
+
+        if(stato[nome] === 2){
+
+            autista = nome;
+
+        }
+
+    });
+
+    if(!autista){
+
+        alert(
+        "Seleziona un conducente"
+        );
+
+        return;
+    }
+
+    try{
+
+        await fetch(
+            API,
+            {
+                method:"POST",
+
+                body:JSON.stringify({
+
+                    tipo:"salvaTurno",
+
+                    data:
+                    document
+                    .getElementById("data")
+                    .value,
+
+                    presenti:
+
+                    presenti,
+
+                    autista:
+
+                    autista
+
+                })
+
+            }
+        );
+
+        alert(
+        "Giornata salvata"
+        );
+
+        location.reload();
+
+    }
+
+    catch(err){
+
+        alert(
+        "Errore durante il salvataggio"
+        );
+
+        console.error(err);
+
+    }
+
+}
+    
 avvia();
 
 </script>
