@@ -554,9 +554,12 @@ catch(err){
         .reverse()
         .forEach(r=>{
 
+            const parti = r.data.split("-");
+
             const dataFormattata =
-            new Date(r.data)
-            .toLocaleDateString(
+            parti[2] + "/" +
+            parti[1] + "/" +
+            parti[0];
               "it-IT"
             );
 
