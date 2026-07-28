@@ -553,11 +553,17 @@ catch(err){
         .reverse()
         .forEach(r=>{
 
+            const dataFormattata =
+            new Date(r.data)
+            .toLocaleDateString(
+              "it-IT"
+            );
+
             html += `
 
           <div class="rigaStorico">
 
-    <b>${r.data}</b>
+   <b>${dataFormattata}</b>
 
     <br>
 
