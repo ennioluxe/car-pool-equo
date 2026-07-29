@@ -35,6 +35,31 @@ h1{
     gap:10px;
 }
 
+    .dashboard{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.boxDash{
+    background:white;
+    border-radius:12px;
+    padding:10px;
+    text-align:center;
+    box-shadow:0 2px 6px rgba(0,0,0,.15);
+}
+
+.titoloDash{
+    font-size:12px;
+    color:#666;
+}
+
+.valoreDash{
+    font-size:22px;
+    font-weight:bold;
+}
+
 .collega{
     border:3px solid #ccc;
     border-radius:12px;
@@ -128,6 +153,50 @@ button{
 
 <h1>🚗 Car Pool Equo</h1>
 
+    <div class="dashboard">
+
+    <div class="boxDash">
+        <div class="titoloDash">
+            Giornate
+        </div>
+        <div id="dashGiornate"
+             class="valoreDash">
+            -
+        </div>
+    </div>
+
+    <div class="boxDash">
+        <div class="titoloDash">
+            Colleghi
+        </div>
+        <div id="dashColleghi"
+             class="valoreDash">
+            -
+        </div>
+    </div>
+
+    <div class="boxDash">
+        <div class="titoloDash">
+            Ultimo autista
+        </div>
+        <div id="dashUltimo"
+             class="valoreDash">
+            -
+        </div>
+    </div>
+
+    <div class="boxDash">
+        <div class="titoloDash">
+            Più in credito
+        </div>
+        <div id="dashCredito"
+             class="valoreDash">
+            -
+        </div>
+    </div>
+
+</div>
+
 <div class="card">
 
     <p>
@@ -214,6 +283,8 @@ async function avvia(){
     creaGriglia();
 
     caricaStorico();
+
+    aggiornaDashboard();
 
 }
 
@@ -554,13 +625,12 @@ catch(err){
         .reverse()
         .forEach(r=>{
 
-            const parti = r.data.split("-");
-
+            const dataOriginale =
+            new Date(r.data);
+            
             const dataFormattata =
-            parti[2] + "/" +
-            parti[1] + "/" +
-            parti[0];
-              "it-IT"
+            dataOriginale.toLocaleDateString(
+                "it-IT"
             );
 
             html += `
@@ -956,6 +1026,70 @@ document
         }
 
     },100);
+
+}
+
+async function aggiornaDashboard(){
+
+    const storico =
+    await fetch(
+        API + "?action=storico"
+    ).then(r=>r.json());
+
+    document
+    .getElementById(
+        "dashGiornate"
+    ).innerText =
+    storico.length;
+
+    document
+    .getElementById(
+        "dashColleghi"
+    ).innerText =
+    Object.keys(
+        statistiche
+    ).length;
+
+    if(storico.length){
+
+        document
+        .getElementById(
+            "dashUltimo"
+        ).innerText =
+        storico[
+            storico.length - 1
+        ].autista;
+    }
+
+    let migliore = "";
+    let punteggio = -999;
+
+    Object.keys(statistiche)
+    .forEach(nome=>{
+
+        if(
+            statistiche[nome]
+            .punteggio > punteggio
+        ){
+
+            punteggio =
+            statistiche[nome]
+            .punteggio;
+
+            migliore =
+            nome;
+        }
+
+    });
+
+    document
+    .getElementById(
+        "dashCredito"
+    ).innerText =
+    migliore +
+    " (" +
+    punteggio +
+    ")";
 
 }
     
