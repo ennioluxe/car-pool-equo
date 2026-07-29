@@ -145,6 +145,20 @@ button{
     margin-top:10px;
 }
 
+    .collegaAdmin{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:8px;
+
+    border-bottom:1px solid #ddd;
+
+}
+
 </style>
 
 </head>
@@ -260,6 +274,36 @@ Data:
 
 </details>
 
+    <div class="card">
+
+    <h3>👥 Gestione Colleghi</h3>
+
+    <p>
+
+        Nuovo collega:
+
+        <input
+            type="text"
+            id="nuovoCollega"
+            placeholder="Nome collega">
+
+        <button
+            id="btnAggiungiCollega">
+
+            ➕ Aggiungi
+
+        </button>
+
+    </p>
+
+    <div id="listaColleghiAdmin">
+
+        Caricamento...
+
+    </div>
+
+</div>
+    
 <script>
 
 const API =
@@ -285,6 +329,8 @@ async function avvia(){
     caricaStorico();
 
     aggiornaDashboard();
+
+    caricaColleghiAdmin();
 
 }
 
@@ -509,6 +555,15 @@ document
 .addEventListener(
 "click",
 preparaStorico
+);
+
+    document
+.getElementById(
+    "btnAggiungiCollega"
+)
+.addEventListener(
+    "click",
+    aggiungiCollega
 );
 
 async function salvaGiornata(){
@@ -890,8 +945,6 @@ aggiornaDashboard();
 
 modificaCorrente = null;
 
-preparaStorico();
-
 document
 .getElementById("grigliaStorico")
 .innerHTML = "";
@@ -1034,6 +1087,163 @@ document
         }
 
     },100);
+
+}
+
+async function caricaColleghiAdmin(){
+
+    const colleghi =
+    await fetch(
+        API + "?action=colleghi"
+    ).then(r=>r.json());
+
+    let html = "";
+
+    colleghi.forEach(c=>{
+
+        html += `
+
+        <div class="collegaAdmin">
+
+            <span>
+
+                ${c.nome}
+
+            </span>
+
+            <button
+
+                onclick="eliminaCollega('${c.nome}')"
+
+                style="background:#dc3545;">
+
+                🗑
+
+            </button>
+
+        </div>
+
+        `;
+
+    });
+
+    document
+    .getElementById(
+        "listaColleghiAdmin"
+    )
+    .innerHTML = html;
+
+}
+
+async function aggiungiCollega(){
+
+    const nome =
+    document
+    .getElementById(
+        "nuovoCollega"
+    )
+    .value
+    .trim();
+
+    if(!nome){
+
+        alert(
+        "Inserire un nome"
+        );
+
+        return;
+    }
+
+    await fetch(
+        API,
+        {
+            method:"POST",
+
+            body:JSON.stringify({
+
+                tipo:
+                "aggiungiCollega",
+
+                nome:
+                nome
+
+            })
+
+        }
+    );
+
+    document
+    .getElementById(
+        "nuovoCollega"
+    ).value = "";
+
+    await caricaColleghiAdmin();
+
+    statistiche =
+    await fetch(
+        API + "?action=statistiche"
+    ).then(r=>r.json());
+
+    creaGriglia();
+
+    aggiornaDashboard();
+    
+    alert(
+    "Collega aggiunto"
+    );
+
+}
+
+async function eliminaCollega(nome){
+
+    const conferma =
+    confirm(
+
+    "Eliminare " +
+    nome +
+    " ?"
+
+    );
+
+    if(!conferma){
+
+        return;
+
+    }
+
+    await fetch(
+        API,
+        {
+            method:"POST",
+
+            body:JSON.stringify({
+
+                tipo:
+                "eliminaCollega",
+
+                nome:
+                nome
+
+            })
+
+        }
+    );
+
+   await caricaColleghiAdmin();
+
+    statistiche =
+    await fetch(
+        API + "?action=statistiche"
+    ).then(r=>r.json());
+
+    creaGriglia();
+
+    aggiornaDashboard();
+
+    
+    alert(
+    "Collega eliminato"
+    );
 
 }
 
