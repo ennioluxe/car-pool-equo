@@ -167,6 +167,27 @@ button{
 
 <h1>🚗 Car Pool Equo</h1>
 
+<p
+style="
+text-align:center;
+margin-bottom:20px;">
+
+<button
+onclick="loginAdmin()">
+
+👑 Accesso Admin
+
+</button>
+
+<button
+onclick="logoutAdmin()">
+
+🚪 Esci
+
+</button>
+
+</p>
+
     <div class="dashboard">
 
     <div class="boxDash">
@@ -274,7 +295,10 @@ Data:
 
 </details>
 
-    <div class="card">
+    <div
+    class="card"
+    id="areaAdmin"
+    style="display:none;">
 
     <h3>👥 Gestione Colleghi</h3>
 
@@ -727,25 +751,41 @@ catch(err){
 
     <br><br>
 
-<button
-    onclick="modificaTurno(${r.id})"
-    style="background:#f59e0b;margin-right:10px;">
+${
 
-    ✏️ Modifica
+isAdmin
+
+?
+
+`
+
+<button
+onclick="modificaTurno(${r.id})"
+style="background:#f59e0b;margin-right:10px;">
+
+✏️ Modifica
 
 </button>
 
 <button
-    onclick="eliminaTurno(${r.id})"
-    style="background:#dc3545;">
+onclick="eliminaTurno(${r.id})"
+style="background:#dc3545;">
 
-    🗑 Elimina
+🗑 Elimina
 
 </button>
+
+`
+
+:
+
+""
+
+}
 
 </div>
 
-            `;
+`;
 
         });
 
@@ -1263,6 +1303,66 @@ async function eliminaCollega(nome){
     alert(
     "Collega eliminato"
     );
+
+}
+
+function mostraFunzioniAdmin(){
+
+    document
+    .getElementById(
+        "areaAdmin"
+    )
+    .style.display =
+    "block";
+
+}
+
+function loginAdmin(){
+
+    const pwd =
+    prompt(
+        "Password amministratore"
+    );
+
+    if(
+        pwd ===
+        PASSWORD_ADMIN
+    ){
+
+        localStorage.setItem(
+            "carpool_admin",
+            "true"
+        );
+
+        isAdmin = true;
+
+        mostraFunzioniAdmin();
+
+        alert(
+            "Modalità amministratore attivata"
+        );
+
+        location.reload();
+
+    }
+
+    else{
+
+        alert(
+            "Password errata"
+        );
+
+    }
+
+}
+
+function logoutAdmin(){
+
+    localStorage.removeItem(
+        "carpool_admin"
+    );
+
+    location.reload();
 
 }
 
