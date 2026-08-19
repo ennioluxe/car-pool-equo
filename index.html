@@ -309,6 +309,13 @@ Data:
 const API =
 "https://script.google.com/macros/s/AKfycbxP2QpM_PjTQfXsBfmgoYZ1W2Ye-hYkUhMD1zAHhbntUdbbo2KsaobMYO_zG-sjHH32-Q/exec";
 
+const PASSWORD_ADMIN = "CarPool2026";
+
+let isAdmin =
+localStorage.getItem(
+    "carpool_admin"
+) === "true";
+
 let statistiche = {};
 let stato = {};
 let statoStorico = {};
@@ -316,6 +323,16 @@ let modificaCorrente = null;
 
 document.getElementById("data").value =
 new Date().toISOString().split("T")[0];
+
+function verificaAdmin(){
+
+    if(isAdmin){
+
+        mostraFunzioniAdmin();
+
+    }
+
+}
 
 async function avvia(){
 
@@ -331,6 +348,8 @@ async function avvia(){
     aggiornaDashboard();
 
     caricaColleghiAdmin();
+
+    verificaAdmin();
 
 }
 
