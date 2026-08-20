@@ -333,15 +333,16 @@ async function avvia(){
         API + "?action=statistiche"
     ).then(r=>r.json());
 
+    aggiornaDashboard();
+
     creaGriglia();
 
     caricaStorico();
 
-    aggiornaDashboard();
-
     caricaColleghiAdmin();
 
     verificaAdmin();
+
 
 }
 
@@ -546,16 +547,9 @@ function suggerisci(){
         )
     );
 
-    if(candidati.length === 0){
-
-        document
-        .getElementById(
-            "nomeAutista"
-        )
-        .innerText = "-";
-
-        return;
-    }
+if(candidati.length === 0){
+    return;
+}
 
     candidati.sort((a,b)=>{
 
@@ -574,19 +568,7 @@ function suggerisci(){
     let migliore =
     candidati[0];
 
-    document
-    .getElementById(
-        "nomeAutista"
-    )
-    .innerHTML =
-
-    migliore.nome +
-
-    "<br>(" +
-
-    migliore.punti +
-
-    ")";
+    
 
     document
     .getElementById(
@@ -698,9 +680,6 @@ caricaStorico();
 
 aggiornaDashboard();
 
-document
-.getElementById("nomeAutista")
-.innerText = "-";
 
 document
 .getElementById("salva")
