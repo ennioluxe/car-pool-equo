@@ -226,6 +226,12 @@ button{
 
 <h3>Storico registrato</h3>
 
+<button id="scaricaStorico">
+    📥 Scarica storico (.xlsx)
+</button>
+
+<br><br>
+
 <div id="storico">
     Caricamento storico...
 </div>
@@ -608,6 +614,14 @@ salvaGiornata
 .getElementById(
     "btnAggiungiCollega"
 )
+
+    document
+.getElementById("scaricaStorico")
+.addEventListener(
+    "click",
+    scaricaStorico
+);
+        
 .addEventListener(
     "click",
     aggiungiCollega
@@ -1246,6 +1260,95 @@ totaleGiornate;
         "-";
 
     }
+
+}
+
+async function scaricaStorico(){
+
+    const storico =
+    await fetch(
+        API + "?action=storico"
+    ).then(r=>r.json());
+
+    let contenuto = [];
+
+    contenuto.push([
+        "Data",
+        "Presenti",
+        "Autista"
+    ]);
+
+    storico.forEach(r=>{
+
+        const data =
+        new Date(r.data)
+        .toLocaleDateString(
+            "it-IT"
+        );
+
+        contenuto.push([
+            data,
+            r.presenti.join(", "),
+            r.autista
+        ]);
+
+    });
+
+    let html = `
+    <html>
+    <head>
+    <meta charset="UTF-8">
+    </head>
+    <body>
+    <table border="1">
+    `;
+
+    contenuto.forEach(riga=>{
+
+        html += "<tr>";
+
+        riga.forEach(cella=>{
+
+            html +=
+            "<td>" +
+            cella +
+            "</td>";
+
+        });
+
+        html += "</tr>";
+
+    });
+
+    html += `
+    </table>
+    </body>
+    </html>
+    `;
+
+    const blob =
+    new Blob(
+        [html],
+        {
+            type:
+            "application/vnd.ms-excel"
+        }
+    );
+
+    const link =
+    document.createElement(
+        "a"
+    );
+
+    link.href =
+    URL.createObjectURL(
+        blob
+    );
+
+    link.download =
+    "storico_car_pool.xls";
+
+    link.click();
 
 }
     
