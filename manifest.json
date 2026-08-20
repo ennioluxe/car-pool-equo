@@ -1,0 +1,15 @@
+{
+  "name": "Car Pool Equo",
+  "short_name": "Car Pool",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f4f6f9",
+  "theme_color": "#003366",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
