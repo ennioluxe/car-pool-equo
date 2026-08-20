@@ -668,9 +668,25 @@ document
     console.log(storico);
 
 const esisteGia =
-storico.some(
-    x => x.data === dataSelezionata
-);
+storico.some(x => {
+
+    const dataStorico =
+    new Date(x.data)
+    .toLocaleDateString(
+        "sv-SE"
+    );
+
+    console.log(
+    dataStorico,
+    dataSelezionata
+    );
+    
+    return (
+        dataStorico ===
+        dataSelezionata
+    );
+
+});
 
 if(esisteGia){
 
@@ -977,6 +993,11 @@ async function salvaGiornataPassata(){
             "Seleziona un conducente"
         );
 
+        console.log(
+        dataStorico,
+        dataSelezionata
+        );
+
         return;
     }
 
@@ -994,10 +1015,26 @@ async function salvaGiornataPassata(){
     )
     .value;
 
-    const esisteGia =
-    storico.some(
-        x => x.data === dataSelezionata
+   const esisteGia =
+storico.some(x => {
+
+    const dataStorico =
+    new Date(x.data)
+    .toLocaleDateString(
+        "sv-SE"
     );
+
+    console.log(
+    dataStorico,
+    dataSelezionata
+    );
+
+    return (
+        dataStorico ===
+        dataSelezionata
+    );
+
+});
 
     if(esisteGia){
 
