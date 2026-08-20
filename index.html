@@ -610,21 +610,22 @@ document
 salvaGiornata
 );
     
-    document
+document
 .getElementById(
     "btnAggiungiCollega"
 )
-
-    document
-.getElementById("scaricaStorico")
-.addEventListener(
-    "click",
-    scaricaStorico
-);
-        
 .addEventListener(
     "click",
     aggiungiCollega
+);
+
+document
+.getElementById(
+    "scaricaStorico"
+)
+.addEventListener(
+    "click",
+    scaricaStorico
 );
 
 async function salvaGiornata(){
