@@ -94,8 +94,9 @@ h1{
 }
 
 .punti{
-    margin-top:8px;
-    font-size:18px;
+    margin-top:10px;
+    font-size:15px;
+    line-height:1.5;
 }
 
 #autistaSuggerito{
@@ -313,6 +314,8 @@ let stato = {};
 let statoStorico = {};
 let modificaCorrente = null;
 
+let totaleGiornate = 0;
+
 document.getElementById("data").value =
 new Date().toISOString().split("T")[0];
 
@@ -333,7 +336,7 @@ async function avvia(){
         API + "?action=statistiche"
     ).then(r=>r.json());
 
-    aggiornaDashboard();
+    await aggiornaDashboard();
 
     creaGriglia();
 
@@ -343,7 +346,6 @@ async function avvia(){
 
     verificaAdmin();
 
-
 }
 
 function creaGriglia(){
@@ -352,11 +354,9 @@ function creaGriglia(){
 
     let html = "";
 
-    const totaleViaggi = Math.max(
-        1,
-        document.getElementById("dashGiornate")
-        .innerText || 0
-    );
+   const totaleViaggi =
+totaleGiornate;
+
 
     Object.keys(statistiche)
     .forEach(nome=>{
@@ -399,19 +399,27 @@ function creaGriglia(){
                 ${nome}
             </div>
 
-            <div class="punti">
+           <div class="punti">
 
-                Presenze
-                ${presenze}
-                (${percPresenze}%)
+    👥 Presenze:
+    ${presenze}
+    (${percPresenze}%)
 
-                <br>
+    <br><br>
 
-                Guide
-                ${guide}
-                (${percGuide}%)
+    🚗 Guide:
+    <strong
+    style="
+    color:#d62828;
+    font-size:20px;
+    ">
 
-            </div>
+    ${guide}
+    (${percGuide}%)
+
+    </strong>
+
+</div>
 
         </div>
         `;
@@ -1376,11 +1384,14 @@ async function aggiornaDashboard(){
         API + "?action=storico"
     ).then(r=>r.json());
 
-    document
-    .getElementById(
-        "dashGiornate"
-    ).innerText =
-    storico.length;
+totaleGiornate =
+storico.length;
+
+document
+.getElementById(
+    "dashGiornate"
+).innerText =
+totaleGiornate;
 
     if(storico.length){
 
