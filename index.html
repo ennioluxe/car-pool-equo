@@ -128,6 +128,15 @@ button{
 #salva:disabled{
     background:#999;
 }
+
+    input:disabled{
+    background:#e9ecef;
+    color:#495057;
+    border:1px solid #ced4da;
+    cursor:not-allowed;
+    opacity:1;
+}
+    
     details summary{
     cursor:pointer;
     font-size:18px;
@@ -306,9 +315,18 @@ new Date().toISOString().split("T")[0];
 
 function verificaAdmin(){
 
+    const campoData =
+    document.getElementById("data");
+
     if(isAdmin){
 
         mostraFunzioniAdmin();
+
+        campoData.disabled = false;
+
+    }else{
+
+        campoData.disabled = true;
 
     }
 
