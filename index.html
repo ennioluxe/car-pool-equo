@@ -168,26 +168,6 @@ button{
 
 <h1>🚗 Car Pool Equo</h1>
 
-<p
-style="
-text-align:center;
-margin-bottom:20px;">
-
-<button
-onclick="loginAdmin()">
-
-👑 Accesso Admin
-
-</button>
-
-<button
-onclick="logoutAdmin()">
-
-🚪 Esci
-
-</button>
-
-</p>
 
     <div class="dashboard">
 
@@ -239,22 +219,6 @@ onclick="logoutAdmin()">
 
     <br>
 
-    <h3>➕ Inserisci giornata passata</h3>
-
-<p>
-Data:
-<input type="date" id="dataStorico">
-</p>
-
-<button id="preparaStorico">
-    Carica colleghi
-</button>
-
-<br><br>
-
-<div id="grigliaStorico"></div>
-
-<hr>
 
 <h3>Storico registrato</h3>
 
@@ -296,6 +260,27 @@ Data:
     </div>
 
 </div>
+
+<p
+style="
+text-align:center;
+margin-top:30px;
+margin-bottom:10px;">
+
+<button onclick="loginAdmin()">
+
+👑 Accesso Admin
+
+</button>
+
+<button onclick="logoutAdmin()">
+
+🚪 Esci
+
+</button>
+
+</p>
+
     
 <script>
 
@@ -607,13 +592,6 @@ document
 salvaGiornata
 );
     
-document
-.getElementById("preparaStorico")
-.addEventListener(
-"click",
-preparaStorico
-);
-
     document
 .getElementById(
     "btnAggiungiCollega"
@@ -1516,3 +1494,13 @@ avvia();
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
