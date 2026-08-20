@@ -202,29 +202,9 @@ onclick="logoutAdmin()">
 
     <div class="boxDash">
         <div class="titoloDash">
-            Colleghi
-        </div>
-        <div id="dashColleghi"
-             class="valoreDash">
-            -
-        </div>
-    </div>
-
-    <div class="boxDash">
-        <div class="titoloDash">
             Ultimo autista
         </div>
         <div id="dashUltimo"
-             class="valoreDash">
-            -
-        </div>
-    </div>
-
-    <div class="boxDash">
-        <div class="titoloDash">
-            Più in credito
-        </div>
-        <div id="dashCredito"
              class="valoreDash">
             -
         </div>
@@ -383,10 +363,42 @@ function creaGriglia(){
 
     let html = "";
 
+    const totaleViaggi = Math.max(
+        1,
+        document.getElementById("dashGiornate")
+        .innerText || 0
+    );
+
     Object.keys(statistiche)
     .forEach(nome=>{
 
         stato[nome] = 0;
+
+        const presenze =
+        statistiche[nome].presenze || 0;
+
+        const guide =
+        statistiche[nome].guide || 0;
+
+        const percPresenze =
+        totaleViaggi > 0
+        ?
+        (
+            presenze * 100 /
+            totaleViaggi
+        ).toFixed(1)
+        :
+        0;
+
+        const percGuide =
+        presenze > 0
+        ?
+        (
+            guide * 100 /
+            presenze
+        ).toFixed(1)
+        :
+        0;
 
         html += `
         <div
@@ -399,7 +411,17 @@ function creaGriglia(){
             </div>
 
             <div class="punti">
-                (${statistiche[nome].punteggio})
+
+                Presenze
+                ${presenze}
+                (${percPresenze}%)
+
+                <br>
+
+                Guide
+                ${guide}
+                (${percGuide}%)
+
             </div>
 
         </div>
@@ -411,7 +433,8 @@ function creaGriglia(){
     .getElementById("griglia")
     .innerHTML = html;
 
-    }
+}
+
 
 function clic(nome){
 
@@ -1379,14 +1402,6 @@ async function aggiornaDashboard(){
     ).innerText =
     storico.length;
 
-    document
-    .getElementById(
-        "dashColleghi"
-    ).innerText =
-    Object.keys(
-        statistiche
-    ).length;
-
     if(storico.length){
 
         document
@@ -1396,39 +1411,16 @@ async function aggiornaDashboard(){
         storico[
             storico.length - 1
         ].autista;
+
+    }else{
+
+        document
+        .getElementById(
+            "dashUltimo"
+        ).innerText =
+        "-";
+
     }
-
-    let migliore = "";
-    let punteggio = -999;
-
-    Object.keys(statistiche)
-    .forEach(nome=>{
-
-        if(
-            statistiche[nome]
-            .punteggio > punteggio
-        ){
-
-            punteggio =
-            statistiche[nome]
-            .punteggio;
-
-            migliore =
-            nome;
-        }
-
-    });
-
-    document
-    .getElementById(
-        "dashCredito"
-    ).innerText =
-    migliore +
-    " (" +
-    punteggio +
-    ")";
-
-}
     
 avvia();
 
