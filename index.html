@@ -656,14 +656,16 @@ async function salvaGiornata(){
     }
 
     const storico =
-await fetch(
-    API + "?action=storico"
-).then(r=>r.json());
+    await fetch(
+        API + "?action=storico"
+    ).then(r=>r.json());
 
 const dataSelezionata =
 document
 .getElementById("data")
 .value;
+
+    console.log(storico);
 
 const esisteGia =
 storico.some(
