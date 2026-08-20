@@ -1009,9 +1009,11 @@ await fetch(
     API + "?action=statistiche"
 ).then(r=>r.json());
 
+await aggiornaDashboard();
+
 caricaStorico();
 
-aggiornaDashboard();
+creaGriglia();
 
 modificaCorrente = null;
 
@@ -1063,11 +1065,11 @@ async function eliminaTurno(id){
             API + "?action=statistiche"
         ).then(r=>r.json());
 
+        await aggiornaDashboard();
+
         creaGriglia();
 
         caricaStorico();
-
-        aggiornaDashboard();
 
     }
 
@@ -1254,9 +1256,9 @@ async function aggiungiCollega(){
         API + "?action=statistiche"
     ).then(r=>r.json());
 
-    creaGriglia();
+    await aggiornaDashboard();
 
-    aggiornaDashboard();
+    creaGriglia();
     
     alert(
     "Collega aggiunto"
@@ -1306,10 +1308,9 @@ async function eliminaCollega(nome){
         API + "?action=statistiche"
     ).then(r=>r.json());
 
+    await aggiornaDashboard();
+
     creaGriglia();
-
-    aggiornaDashboard();
-
     
     alert(
     "Collega eliminato"
