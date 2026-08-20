@@ -655,6 +655,30 @@ async function salvaGiornata(){
         return;
     }
 
+    const storico =
+await fetch(
+    API + "?action=storico"
+).then(r=>r.json());
+
+const dataSelezionata =
+document
+.getElementById("data")
+.value;
+
+const esisteGia =
+storico.some(
+    x => x.data === dataSelezionata
+);
+
+if(esisteGia){
+
+    alert(
+        "⚠️ Esiste già una giornata registrata per questa data."
+    );
+
+    return;
+}
+    
     try{
 
         await fetch(
@@ -953,6 +977,37 @@ async function salvaGiornataPassata(){
 
         return;
     }
+
+    if(!modificaCorrente){
+
+    const storico =
+    await fetch(
+        API + "?action=storico"
+    ).then(r=>r.json());
+
+    const dataSelezionata =
+    document
+    .getElementById(
+        "dataStorico"
+    )
+    .value;
+
+    const esisteGia =
+    storico.some(
+        x => x.data === dataSelezionata
+    );
+
+    if(esisteGia){
+
+        alert(
+            "⚠️ Esiste già una giornata registrata per questa data."
+        );
+
+        return;
+
+    }
+
+}
 
     if(modificaCorrente){
 
