@@ -521,13 +521,22 @@ function suggerisci(){
 
         if(stato[nome] > 0){
 
+            const presenze =
+            statistiche[nome].presenze || 0;
+
+            const guide =
+            statistiche[nome].guide || 0;
+
+            if(presenze === 0){
+                return;
+            }
+
             candidati.push({
 
                 nome:nome,
 
-                punti:
-                statistiche[nome]
-                .punteggio,
+                percentuale:
+                guide / presenze,
 
                 ultima:
                 statistiche[nome]
@@ -547,16 +556,22 @@ function suggerisci(){
         )
     );
 
-if(candidati.length === 0){
-    return;
-}
+    if(candidati.length === 0){
+        return;
+    }
 
     candidati.sort((a,b)=>{
 
         if(
-            b.punti !== a.punti
+            a.percentuale !==
+            b.percentuale
         ){
-            return b.punti - a.punti;
+
+            return (
+                a.percentuale -
+                b.percentuale
+            );
+
         }
 
         return a.ultima.localeCompare(
@@ -565,10 +580,8 @@ if(candidati.length === 0){
 
     });
 
-    let migliore =
+    const migliore =
     candidati[0];
-
-    
 
     document
     .getElementById(
