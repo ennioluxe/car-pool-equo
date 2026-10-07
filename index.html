@@ -41,7 +41,7 @@ h1{
     gap:10px;
 }
 
-    .dashboard{
+.dashboard{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:10px;
@@ -124,7 +124,7 @@ button{
     background:#999;
 }
 
-    input:disabled{
+input:disabled{
     background:#e9ecef;
     color:#495057;
     border:1px solid #ced4da;
@@ -132,7 +132,7 @@ button{
     opacity:1;
 }
     
-    details summary{
+details summary{
     cursor:pointer;
     font-size:18px;
     font-weight:bold;
@@ -143,25 +143,19 @@ button{
     padding:8px 0;
 }
 
-    #grigliaStorico{
+#grigliaStorico{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:10px;
     margin-top:10px;
 }
 
-    .collegaAdmin{
-
+.collegaAdmin{
     display:flex;
-
     justify-content:space-between;
-
     align-items:center;
-
     padding:8px;
-
     border-bottom:1px solid #ddd;
-
 }
 
 </style>
@@ -172,514 +166,236 @@ button{
 
 <h1>🚗 A CHI TOCCA?</h1>
 
-
-    <div class="dashboard">
-
+<div class="dashboard">
     <div class="boxDash">
-        <div class="titoloDash">
-            Giornate
-        </div>
-        <div id="dashGiornate"
-             class="valoreDash">
-            -
-        </div>
+        <div class="titoloDash">Giornate</div>
+        <div id="dashGiornate" class="valoreDash">-</div>
     </div>
-
     <div class="boxDash">
-        <div class="titoloDash">
-            Ultimo autista
-        </div>
-        <div id="dashUltimo"
-             class="valoreDash">
-            -
-        </div>
+        <div class="titoloDash">Ultimo autista</div>
+        <div id="dashUltimo" class="valoreDash">-</div>
     </div>
-
 </div>
 
 <div class="card">
-
-    <p>
-    Data:
-    <input type="date" id="data">
-    </p>
-
-    <div id="griglia" class="grid">
-    </div>
-
-    <button
-        id="salva"
-        disabled>
-        ✅ Salva Giornata
-    </button>
-
+    <p>Data: <input type="date" id="data"></p>
+    <div id="griglia" class="grid"></div>
+    <button id="salva" disabled>✅ Salva Giornata</button>
 </div>
 
 <details class="card">
-
-    <summary>
-        📜 Storico e giornate passate
-    </summary>
-
+    <summary>📜 Storico e giornate passate</summary>
     <br>
+    <h3>Storico registrato</h3>
+    <button id="scaricaStorico">📥 Scarica storico (.xls)</button>
+    <br><br>
 
-
-<h3>Storico registrato</h3>
-
-<button id="scaricaStorico">
-    📥 Scarica storico (.xls)
-</button>
-
-<br><br>
-
-<!-- Contenitore dinamico per la modifica dei turni inserito nello storico -->
-<div id="areaModificaStorico" style="display:none; background:#fffdbf; padding:15px; border:2px dashed #f59e0b; border-radius:12px; margin-bottom:15px;">
-    <h4 style="margin-top:0;">✏️ Modifica Giornata</h4>
-    <p>Data: <input type="date" id="dataStorico"></p>
-    <div id="grigliaStorico"></div>
-    <button id="btnSalvaModifica" style="background:#f59e0b; width:100%; margin-top:15px; font-weight:bold;">💾 Salva modifiche</button>
-    <button onclick="annullaModifica()" style="background:#6c757d; width:100%; margin-top:5px;">Annulla</button>
-</div>
-
-<div id="storico">
-    Caricamento storico...
-</div>
-
-</details>
-
-    <div
-    class="card"
-    id="areaAdmin"
-    style="display:none;">
-
-    <h3>👥 Gestione Colleghi</h3>
-
-    <p>
-
-        Nuovo collega:
-
-        <input
-            type="text"
-            id="nuovoCollega"
-            placeholder="Nome collega">
-
-        <button
-            id="btnAggiungiCollega">
-
-            ➕ Aggiungi
-
-        </button>
-
-    </p>
-
-    <div id="listaColleghiAdmin">
-
-        Caricamento...
-
+    <!-- Contenitore per la modifica dei turni all'interno dello storico -->
+    <div id="areaModificaStorico" style="display:none; background:#fffdbf; padding:15px; border:2px dashed #f59e0b; border-radius:12px; margin-bottom:15px; color:#333;">
+        <h4 style="margin-top:0;">✏️ Modifica Giornata</h4>
+        <p>Data: <input type="date" id="dataStorico"></p>
+        <div id="grigliaStorico"></div>
+        <button id="btnSalvaModifica" style="background:#f59e0b; width:100%; margin-top:15px; font-weight:bold;">💾 Salva modifiche</button>
+        <button type="button" onclick="annullaModifica()" style="background:#6c757d; width:100%; margin-top:5px;">Annulla</button>
     </div>
 
+    <div id="storico">Caricamento storico...</div>
+</details>
+
+<div class="card" id="areaAdmin" style="display:none;">
+    <h3>👥 Gestione Colleghi</h3>
+    <p>
+        Nuovo collega:
+        <input type="text" id="nuovoCollega" placeholder="Nome collega">
+        <button id="btnAggiungiCollega">➕ Aggiungi</button>
+    </p>
+    <div id="listaColleghiAdmin">Caricamento...</div>
 </div>
 
-<p
-style="
-text-align:center;
-margin-top:30px;
-margin-bottom:10px;">
-
-<button onclick="loginAdmin()">
-
-👑 Accesso Admin
-
-</button>
-
-<button onclick="logoutAdmin()">
-
-🚪 Esci
-
-</button>
-
+<p style="text-align:center; margin-top:30px; margin-bottom:10px;">
+    <button onclick="loginAdmin()">👑 Accesso Admin</button>
+    <button onclick="logoutAdmin()">🚪 Esci</button>
 </p>
 
-    
 <script>
-
-const API =
-"https://google.com";
-
+const API = "https://google.com";
 const PASSWORD_ADMIN = "CarPool2026";
 
-let isAdmin =
-localStorage.getItem(
-    "carpool_admin"
-) === "true";
-
+let isAdmin = localStorage.getItem("carpool_admin") === "true";
 let statistiche = {};
 let stato = {};
 let statoStorico = {}; 
 let modificaCorrente = null;
-
 let totaleGiornate = 0;
 
+// Corretto l'assegnamento della stringa data standard ISO
 document.getElementById("data").value = new Date().toISOString().split("T")[0];
 
 function verificaAdmin(){
-
-    const campoData =
-    document.getElementById("data");
-
+    const campoData = document.getElementById("data");
     if(isAdmin){
-
         mostraFunzioniAdmin();
-
         campoData.disabled = false;
-
     }else{
-
         campoData.disabled = true;
-
     }
-
 }
 
 async function avvia(){
-
     console.time("AVVIO");
+    try {
+        statistiche = await fetch(API + "?action=statistiche").then(r=>r.json());
+        await aggiornaDashboard();
+        creaGriglia();
+        await caricaStorico();
 
-    console.time("STATISTICHE");
-
-    statistiche =
-    await fetch(
-        API + "?action=statistiche"
-    ).then(r=>r.json());
-
-    console.timeEnd("STATISTICHE");
-
-
-    console.time("DASHBOARD");
-
-    await aggiornaDashboard();
-
-    console.timeEnd("DASHBOARD");
-
-
-    console.time("GRIGLIA");
-
-    creaGriglia();
-
-    console.timeEnd("GRIGLIA");
-
-
-    console.time("STORICO");
-
-    await caricaStorico();
-
-    console.timeEnd("STORICO");
-
-
-    if(isAdmin){
-
-        console.time("ADMIN");
-
-        await caricaColleghiAdmin();
-
-        console.timeEnd("ADMIN");
-
+        if(isAdmin){
+            await caricaColleghiAdmin();
+        }
+        verificaAdmin();
+    } catch(e) {
+        console.error("Errore nel caricamento dei dati dall'API:", e);
     }
-
-    verificaAdmin();
-
     console.timeEnd("AVVIO");
-
 }
 
 function creaGriglia(){
-
     stato = {};
-
     let html = "";
+    const totaleViaggi = totaleGiornate;
 
-   const totaleViaggi =
-totaleGiornate;
-
-
-    Object.keys(statistiche)
-    .forEach(nome=>{
-
+    Object.keys(statistiche).forEach(nome=>{
         stato[nome] = 0;
-
-        const presenze =
-        statistiche[nome].presenze || 0;
-
-        const guide =
-        statistiche[nome].guide || 0;
-
-        const percPresenze =
-        totaleViaggi > 0
-        ?
-        (
-            presenze * 100 /
-            totaleViaggi
-        ).toFixed(1)
-        :
-        0;
-
-        const percGuide =
-        presenze > 0
-        ?
-        (
-            guide * 100 /
-            presenze
-        ).toFixed(1)
-        :
-        0;
+        const presenze = statistiche[nome].presenze || 0;
+        const guide = statistiche[nome].guide || 0;
+        const percPresenze = totaleViaggi > 0 ? (presenze * 100 / totaleViaggi).toFixed(1) : 0;
+        const percGuide = presenze > 0 ? (guide * 100 / presenze).toFixed(1) : 0;
 
         html += `
-        <div
-            class="collega assente"
-            id="c_${nome}"
-            onclick="clic('${nome}')">
-
-            <div class="nome">
-                ${nome}
+        <div class="collega assente" id="c_${nome}" onclick="clic('${nome}')">
+            <div class="nome">${nome}</div>
+            <div class="punti">
+                👥 Presenze: ${presenze} (${percPresenze}%)
+                <br><br>
+                🚗 Guide: <strong style="color:#d62828; font-size:20px;">${guide} (${percGuide}%)</strong>
             </div>
-
-           <div class="punti">
-
-    👥 Presenze:
-    ${presenze}
-    (${percPresenze}%)
-
-    <br><br>
-
-    🚗 Guide:
-    <strong
-    style="
-    color:#d62828;
-    font-size:20px;
-    ">
-
-    ${guide}
-    (${percGuide}%)
-
-    </strong>
-
-</div>
-
         </div>
         `;
-
     });
 
-    document
-    .getElementById("griglia")
-    .innerHTML = html;
-
+    document.getElementById("griglia").innerHTML = html;
 }
 
 function clic(nome){
-
     let attuale = stato[nome];
-
     if(attuale === 0){
-
         stato[nome] = 1;
-
-    }
-
-    else if(attuale === 1){
-
-        Object.keys(stato)
-        .forEach(n=>{
-
-            if(stato[n]===2){
-
-                stato[n]=1;
-
-            }
-
+    } else if(attuale === 1){
+        Object.keys(stato).forEach(n=>{
+            if(stato[n]===2){ stato[n]=1; }
         });
-
         stato[nome] = 2;
-
-    }
-
-    else{
-
+    } else {
         stato[nome] = 0;
-
     }
-
     aggiorna();
-
 }
 
 function aggiorna(){
-
     let autistaRosso = false;
 
-    Object.keys(stato)
-    .forEach(nome=>{
+    Object.keys(stato).forEach(nome=>{
+        let el = document.getElementById("c_" + nome);
+        if(!el) return;
+        el.className = "collega";
 
-        let el =
-        document.getElementById(
-            "c_" + nome
-        );
-
-        el.className =
-        "collega";
-
-        if(stato[nome] == 0){
-
-            el.classList.add(
-                "assente"
-            );
-
-        }
-
-        if(stato[nome] == 1){
-
-            el.classList.add(
-                "presente"
-            );
-
-        }
-
-        if(stato[nome] == 2){
-
-            el.classList.add(
-                "autista"
-            );
-
-            autistaRosso = true;
-        }
-
+        if(stato[nome] == 0){ el.classList.add("assente"); }
+        if(stato[nome] == 1){ el.classList.add("presente"); }
+        if(stato[nome] == 2){ el.classList.add("autista"); autistaRosso = true; }
     });
 
     suggerisci();
-
-    document
-    .getElementById("salva")
-    .disabled =
-    !autistaRosso;
+    document.getElementById("salva").disabled = !autistaRosso;
 }
 
 function suggerisci(){
-
     let candidati = [];
 
-    Object.keys(stato)
-    .forEach(nome=>{
-
+    Object.keys(stato).forEach(nome=>{
         if(stato[nome] > 0){
-
-            const presenze =
-            statistiche[nome].presenze || 0;
-
-            const guide =
-            statistiche[nome].guide || 0;
-
-            if(presenze === 0){
-                return;
-            }
-
+            const presenze = statistiche[nome].presenze || 0;
+            const guide = statistiche[nome].guide || 0;
+            if(presenze === 0){ return; }
             candidati.push({
-
-                nome:nome,
-
-                percentuale:
-                guide / presenze,
-
-                ultima:
-                statistiche[nome]
-                .ultimaGuida || ""
-
+                nome: nome,
+                percentuale: guide / presenze,
+                ultima: statistiche[nome].ultimaGuida || ""
             });
-
         }
-
     });
 
-    document
-    .querySelectorAll(".collega")
-    .forEach(x =>
-        x.classList.remove(
-            "suggerito"
-        )
-    );
-
-    if(candidati.length === 0){
-        return;
-    }
+    document.querySelectorAll(".collega").forEach(x => x.classList.remove("suggerito"));
+    if(candidati.length === 0){ return; }
 
     candidati.sort((a,b)=>{
-
-        if(
-            a.percentuale !==
-            b.percentuale
-        ){
-
-            return (
-                a.percentuale -
-                b.percentuale
-            );
-
-        }
-
-        return a.ultima.localeCompare(
-            b.ultima
-        );
-
+        if(a.percentuale !== b.percentuale){ return a.percentuale - b.percentuale; }
+        return a.ultima.localeCompare(b.ultima);
     });
 
-    const migliore =
-    candidati[0];
-
-    document
-    .getElementById(
-        "c_" + migliore.nome
-    )
-    .classList.add(
-        "suggerito"
-    );
-
+    const migliore = candidati[0];
+    const elSuggerito = document.getElementById("c_" + migliore.nome);
+    if(elSuggerito) { elSuggerito.classList.add("suggerito"); }
 }
-document
-.getElementById("salva")
-.addEventListener(
-"click",
-salvaGiornata
-);
-    
-document
-.getElementById(
-    "btnAggiungiCollega"
-)
-.addEventListener(
-    "click",
-    aggiungiCollega
-);
 
-document
-.getElementById(
-    "scaricaStorico"
-)
-.addEventListener(
-    "click",
-    scaricaStorico
-);
-
-document
-.getElementById(
-    "btnSalvaModifica"
-)
-.addEventListener(
-    "click",
-    salvaModificaTurno
-);
+document.getElementById("salva").addEventListener("click", salvaGiornata);
+document.getElementById("btnAggiungiCollega").addEventListener("click", aggiungiCollega);
+document.getElementById("scaricaStorico").addEventListener("click", scaricaStorico);
+document.getElementById("btnSalvaModifica").addEventListener("click", salvaModificaTurno);
 
 async function salvaGiornata(){
-
     let presenti = [];
-
     let autista = null;
 
+    Object.keys(stato).forEach(nome=>{
+        if(stato[nome] > 0){ presenti.push(nome); }
+        if(stato[nome] === 2){ autista = nome; }
+    });
+
+    if(!autista){ alert("Seleziona un conducente"); return; }
+
+    const storico = await fetch(API + "?action=storico").then(r=>r.json());
+    const dataSelezionata = document.getElementById("data").value;
+
+    const esisteGia = storico.some(x => {
+        const dataStorico = new Date(x.data).toLocaleDateString("sv-SE");
+        return (dataStorico === dataSelezionata);
+    });
+
+    if(esisteGia){ alert("⚠️ Esiste già una giornata registrata per questa data."); return; }
+    
+    try{
+        await fetch(API, {
+            method:"POST",
+            body:JSON.stringify({
+                tipo:"salvaTurno",
+                data: dataSelezionata,
+                presenti: presenti,
+                autista: autista
+            })
+        });
+
+        alert("Giornata salvata");
+        statistiche = await fetch(API + "?action=statistiche").then(r=>r.json());
+        stato = {};
+        await aggiornaDashboard();
+        creaGriglia();
+        caricaStorico();
+        document.getElementById("salva").disabled = true;
+    } catch(err) {
+        alert("Errore durante il salvataggio");
+        console.error(err);
+    }
+}
+
+async function caricaStorico(){
+    try{
