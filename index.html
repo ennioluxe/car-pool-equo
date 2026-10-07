@@ -190,7 +190,7 @@ details summary{
     <button id="scaricaStorico">📥 Scarica storico (.xls)</button>
     <br><br>
 
-    <!-- Contenitore per la modifica dei turni all'interno dello storico -->
+    <!-- Contenitore per la modifica dei turni inserito nello storico -->
     <div id="areaModificaStorico" style="display:none; background:#fffdbf; padding:15px; border:2px dashed #f59e0b; border-radius:12px; margin-bottom:15px; color:#333;">
         <h4 style="margin-top:0;">✏️ Modifica Giornata</h4>
         <p>Data: <input type="date" id="dataStorico"></p>
@@ -228,7 +228,7 @@ let statoStorico = {};
 let modificaCorrente = null;
 let totaleGiornate = 0;
 
-// Corretto l'assegnamento della stringa data standard ISO
+// RISOLTO: Inserito l'indice [0] per passare una stringa valida al campo input date
 document.getElementById("data").value = new Date().toISOString().split("T")[0];
 
 function verificaAdmin(){
@@ -342,6 +342,7 @@ function suggerisci(){
         return a.ultima.localeCompare(b.ultima);
     });
 
+    // RISOLTO: Inserito l'indice [0] per individuare correttamente l'oggetto del candidato ideale
     const migliore = candidati[0];
     const elSuggerito = document.getElementById("c_" + migliore.nome);
     if(elSuggerito) { elSuggerito.classList.add("suggerito"); }
@@ -393,9 +394,3 @@ async function salvaGiornata(){
         document.getElementById("salva").disabled = true;
     } catch(err) {
         alert("Errore durante il salvataggio");
-        console.error(err);
-    }
-}
-
-async function caricaStorico(){
-    try{
