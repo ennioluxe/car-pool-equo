@@ -334,20 +334,52 @@ function verificaAdmin(){
 
 async function avvia(){
 
+    console.time("AVVIO");
+
+    console.time("STATISTICHE");
+
     statistiche =
     await fetch(
         API + "?action=statistiche"
     ).then(r=>r.json());
 
+    console.timeEnd("STATISTICHE");
+
+
+    console.time("DASHBOARD");
+
     await aggiornaDashboard();
+
+    console.timeEnd("DASHBOARD");
+
+
+    console.time("GRIGLIA");
 
     creaGriglia();
 
-    caricaStorico();
+    console.timeEnd("GRIGLIA");
 
-    caricaColleghiAdmin();
+
+    console.time("STORICO");
+
+    await caricaStorico();
+
+    console.timeEnd("STORICO");
+
+
+    if(isAdmin){
+
+        console.time("ADMIN");
+
+        await caricaColleghiAdmin();
+
+        console.timeEnd("ADMIN");
+
+    }
 
     verificaAdmin();
+
+    console.timeEnd("AVVIO");
 
 }
 
