@@ -9,9 +9,7 @@
 <title>A CHI TOCCA?</title>
 
 <link rel="icon" type="image/png" href="favicon.png">
-
 <link rel="apple-touch-icon" href="favicon.png">
-
 <link rel="manifest" href="manifest.json">
 
 <style>
@@ -41,7 +39,7 @@ h1{
     gap:10px;
 }
 
-    .dashboard{
+.dashboard{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:10px;
@@ -92,6 +90,7 @@ h1{
 
 .suggerito{
     border-color:red !important;
+    box-shadow:0 0 0 3px rgba(255,0,0,.25);
 }
 
 .nome{
@@ -105,6 +104,35 @@ h1{
     line-height:1.5;
 }
 
+.guideBox{
+    color:#d62828;
+    font-size:20px;
+}
+
+.presente .guideBox,
+.autista .guideBox{
+    color:white;
+}
+
+#suggerimento{
+    text-align:center;
+    font-size:18px;
+    font-weight:bold;
+    color:#b00020;
+    margin-top:15px;
+    min-height:24px;
+}
+
+#bannerModifica{
+    display:none;
+    background:#fff3cd;
+    border:1px solid #f59e0b;
+    border-radius:8px;
+    padding:10px;
+    margin-bottom:12px;
+    text-align:center;
+}
+
 button{
     padding:12px;
     border:none;
@@ -114,25 +142,33 @@ button{
     cursor:pointer;
 }
 
+button:disabled{
+    background:#999;
+    cursor:not-allowed;
+}
+
 #salva{
     width:100%;
-    margin-top:20px;
+    margin-top:15px;
     font-size:18px;
 }
 
-#salva:disabled{
-    background:#999;
+#annullaModifica{
+    display:none;
+    width:100%;
+    margin-top:10px;
+    background:#6c757d;
 }
 
-    input:disabled{
+input:disabled{
     background:#e9ecef;
     color:#495057;
     border:1px solid #ced4da;
     cursor:not-allowed;
     opacity:1;
 }
-    
-    details summary{
+
+details summary{
     cursor:pointer;
     font-size:18px;
     font-weight:bold;
@@ -143,25 +179,21 @@ button{
     padding:8px 0;
 }
 
-    #grigliaStorico{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-top:10px;
+.collegaAdmin{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:8px;
+    border-bottom:1px solid #ddd;
 }
 
-    .collegaAdmin{
+.btnModifica{
+    background:#f59e0b;
+    margin-right:10px;
+}
 
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    padding:8px;
-
-    border-bottom:1px solid #ddd;
-
+.btnElimina{
+    background:#dc3545;
 }
 
 </style>
@@ -172,1138 +204,594 @@ button{
 
 <h1>🚗 A CHI TOCCA?</h1>
 
-
-    <div class="dashboard">
+<div class="dashboard">
 
     <div class="boxDash">
-        <div class="titoloDash">
-            Giornate
-        </div>
-        <div id="dashGiornate"
-             class="valoreDash">
-            -
-        </div>
+        <div class="titoloDash">Giornate</div>
+        <div id="dashGiornate" class="valoreDash">-</div>
     </div>
 
     <div class="boxDash">
-        <div class="titoloDash">
-            Ultimo autista
-        </div>
-        <div id="dashUltimo"
-             class="valoreDash">
-            -
-        </div>
+        <div class="titoloDash">Ultimo autista</div>
+        <div id="dashUltimo" class="valoreDash">-</div>
     </div>
 
 </div>
 
 <div class="card">
 
+    <div id="bannerModifica"></div>
+
     <p>
-    Data:
-    <input type="date" id="data">
+        Data:
+        <input type="date" id="data">
     </p>
 
     <div id="griglia" class="grid">
+        Caricamento...
     </div>
 
-    <button
-        id="salva"
-        disabled>
-        ✅ Salva Giornata
-    </button>
+    <div id="suggerimento"></div>
+
+    <button id="salva" disabled>✅ Salva Giornata</button>
+
+    <button id="annullaModifica">✖ Annulla modifica</button>
 
 </div>
 
 <details class="card">
 
-    <summary>
-        📜 Storico e giornate passate
-    </summary>
+    <summary>📜 Storico e giornate passate</summary>
 
     <br>
 
+    <h3>Storico registrato</h3>
 
-<h3>Storico registrato</h3>
+    <button id="scaricaStorico">📥 Scarica storico (.xls)</button>
 
-<button id="scaricaStorico">
-    📥 Scarica storico (.xlsx)
-</button>
+    <br><br>
 
-<br><br>
-
-<div id="storico">
-    Caricamento storico...
-</div>
+    <div id="storico">Caricamento storico...</div>
 
 </details>
 
-    <div
-    class="card"
-    id="areaAdmin"
-    style="display:none;">
+<div class="card" id="areaAdmin" style="display:none;">
 
     <h3>👥 Gestione Colleghi</h3>
 
     <p>
-
         Nuovo collega:
-
-        <input
-            type="text"
-            id="nuovoCollega"
-            placeholder="Nome collega">
-
-        <button
-            id="btnAggiungiCollega">
-
-            ➕ Aggiungi
-
-        </button>
-
+        <input type="text" id="nuovoCollega" placeholder="Nome collega">
+        <button id="btnAggiungiCollega">➕ Aggiungi</button>
     </p>
 
-    <div id="listaColleghiAdmin">
-
-        Caricamento...
-
-    </div>
+    <div id="listaColleghiAdmin">Caricamento...</div>
 
 </div>
 
-<p
-style="
-text-align:center;
-margin-top:30px;
-margin-bottom:10px;">
+<p style="text-align:center; margin-top:30px; margin-bottom:10px;">
 
-<button onclick="loginAdmin()">
+    <button id="btnLogin">👑 Accesso Admin</button>
 
-👑 Accesso Admin
-
-</button>
-
-<button onclick="logoutAdmin()">
-
-🚪 Esci
-
-</button>
+    <button id="btnLogout">🚪 Esci</button>
 
 </p>
 
-    
+
 <script>
 
+/* ============================================================
+   CONFIGURAZIONE
+   ============================================================ */
+
 const API =
-"https://script.google.com/macros/s/AKfycbxeGWU60GxyP95N5OOISlqyVo2FtyDb-RGvt9vAAdwE0MGwpZui589poYTC41bBc8fV6g/exec";
+"https://script.google.com/macros/s/AKfycbzNGjL8JcSFFSoipvd0_4-C_GdsknLapRpCypOSsBCMRWqaKswG4VVIrzBcU4sKQ8Sh-A/exec";
 
 const PASSWORD_ADMIN = "CarPool2026";
 
-let isAdmin =
-localStorage.getItem(
-    "carpool_admin"
-) === "true";
+/* ============================================================
+   STATO DELL'APP
+   ============================================================ */
 
-let statistiche = {};
-let stato = {};
-let modificaCorrente = null;
+let isAdmin = localStorage.getItem("carpool_admin") === "true";
 
-let totaleGiornate = 0;
+let statistiche      = {};   // { nome: {presenze, guide, ultimaGuida} }
+let colleghiLista    = [];   // [nome, nome, ...]
+let storicoCache     = [];   // turni ordinati per data
+let stato            = {};   // { nome: 0 assente | 1 presente | 2 autista }
+let modificaCorrente = null; // id del turno in modifica (null = nuovo turno)
+let occupato         = false;
 
-document.getElementById("data").value =
-new Date().toISOString().split("T")[0];
+const $ = id => document.getElementById(id);
 
-function verificaAdmin(){
+/* ============================================================
+   FUNZIONI DI UTILITA'
+   ============================================================ */
 
-    const campoData =
-    document.getElementById("data");
-
-    if(isAdmin){
-
-        mostraFunzioniAdmin();
-
-        campoData.disabled = false;
-
-    }else{
-
-        campoData.disabled = true;
-
-    }
-
+function esc(s){
+    return String(s).replace(/[&<>"']/g, c => ({
+        "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+    }[c]));
 }
 
-let storicoCache = [];
+function formatData(iso){
+    const p = String(iso).split("-");
+    if(p.length !== 3) return iso;
+    return p[2] + "/" + p[1] + "/" + p[0];
+}
+
+function oggi(){
+    const d = new Date();
+    return d.getFullYear() + "-" +
+           String(d.getMonth() + 1).padStart(2,"0") + "-" +
+           String(d.getDate()).padStart(2,"0");
+}
+
+async function post(payload){
+    const res = await fetch(API, {
+        method: "POST",
+        body: JSON.stringify(payload)
+    });
+    try{
+        return await res.json();
+    }catch(e){
+        return { success:true };
+    }
+}
+
+/* ============================================================
+   CARICAMENTO DATI (una sola chiamata: bootstrap)
+   ============================================================ */
 
 async function avvia(){
-  const r = await fetch(API + "?action=bootstrap").then(x=>x.json());
-  statistiche   = r.statistiche;
-  storicoCache  = r.storico;
-  totaleGiornate = r.storico.length;
 
-  // dashboard
-  document.getElementById("dashGiornate").innerText = totaleGiornate;
-  document.getElementById("dashUltimo").innerText =
-    r.storico.length ? r.storico[r.storico.length-1].autista : "-";
+    try{
 
-  creaGriglia();
-  mostraStoricoDaCache();          // vedi sotto
-  if (isAdmin) caricaColleghiAdmin();
-  verificaAdmin();
+        const r = await fetch(API + "?action=bootstrap").then(x => x.json());
+
+        statistiche   = r.statistiche || {};
+        colleghiLista = (r.colleghi || []).map(c => c.nome);
+        storicoCache  = (r.storico || [])
+            .slice()
+            .sort((a,b) => String(a.data).localeCompare(String(b.data)));
+
+        $("dashGiornate").innerText = storicoCache.length;
+        $("dashUltimo").innerText =
+            storicoCache.length
+            ? storicoCache[storicoCache.length - 1].autista
+            : "-";
+
+        creaGriglia();
+        mostraStorico();
+        caricaColleghiAdmin();
+        verificaAdmin();
+        aggiornaInterfacciaModifica();
+
+    }catch(err){
+
+        console.error(err);
+
+        $("griglia").innerHTML =
+            "Errore di caricamento. Ricarica la pagina.";
+
+        $("storico").innerHTML = "Errore caricamento storico";
+    }
 }
+
+/* ============================================================
+   GRIGLIA COLLEGHI
+   ============================================================ */
 
 function creaGriglia(){
 
     stato = {};
 
+    const totaleViaggi = storicoCache.length;
+
     let html = "";
 
-   const totaleViaggi =
-totaleGiornate;
-
-
-    Object.keys(statistiche)
-    .forEach(nome=>{
+    Object.keys(statistiche).forEach(nome => {
 
         stato[nome] = 0;
 
-        const presenze =
-        statistiche[nome].presenze || 0;
-
-        const guide =
-        statistiche[nome].guide || 0;
+        const presenze = statistiche[nome].presenze || 0;
+        const guide    = statistiche[nome].guide || 0;
 
         const percPresenze =
-        totaleViaggi > 0
-        ?
-        (
-            presenze * 100 /
-            totaleViaggi
-        ).toFixed(1)
-        :
-        0;
+            totaleViaggi > 0
+            ? (presenze * 100 / totaleViaggi).toFixed(1)
+            : "0.0";
 
         const percGuide =
-        presenze > 0
-        ?
-        (
-            guide * 100 /
-            presenze
-        ).toFixed(1)
-        :
-        0;
+            presenze > 0
+            ? (guide * 100 / presenze).toFixed(1)
+            : "0.0";
 
         html += `
-        <div
-            class="collega assente"
-            id="c_${nome}"
-            onclick="clic('${nome}')">
+        <div class="collega assente" data-nome="${esc(nome)}">
 
-            <div class="nome">
-                ${nome}
+            <div class="nome">${esc(nome)}</div>
+
+            <div class="punti">
+
+                👥 Presenze: ${presenze} (${percPresenze}%)
+
+                <br><br>
+
+                🚗 Guide:
+                <strong class="guideBox">
+                    ${guide} (${percGuide}%)
+                </strong>
+
             </div>
-
-           <div class="punti">
-
-    👥 Presenze:
-    ${presenze}
-    (${percPresenze}%)
-
-    <br><br>
-
-    🚗 Guide:
-    <strong
-    style="
-    color:#d62828;
-    font-size:20px;
-    ">
-
-    ${guide}
-    (${percGuide}%)
-
-    </strong>
-
-</div>
 
         </div>
         `;
-
     });
 
-    document
-    .getElementById("griglia")
-    .innerHTML = html;
+    if(html === ""){
+        html = "Nessun collega presente. Aggiungili dall'area admin.";
+    }
 
+    $("griglia").innerHTML = html;
+
+    document.querySelectorAll("#griglia .collega").forEach(el => {
+        el.addEventListener("click", () => clic(el.dataset.nome));
+    });
+
+    $("suggerimento").innerText = "";
+    $("salva").disabled = true;
 }
-
 
 function clic(nome){
 
-    let attuale = stato[nome];
+    const attuale = stato[nome];
 
     if(attuale === 0){
 
         stato[nome] = 1;
 
-    }
+    }else if(attuale === 1){
 
-    else if(attuale === 1){
-
-        Object.keys(stato)
-        .forEach(n=>{
-
-            if(stato[n]===2){
-
-                stato[n]=1;
-
-            }
-
+        // un solo autista alla volta
+        Object.keys(stato).forEach(n => {
+            if(stato[n] === 2) stato[n] = 1;
         });
 
         stato[nome] = 2;
 
-    }
-
-    else{
+    }else{
 
         stato[nome] = 0;
-
     }
 
     aggiorna();
-
 }
 
 function aggiorna(){
 
-    let autistaRosso = false;
+    let autistaScelto = false;
 
-    Object.keys(stato)
-    .forEach(nome=>{
+    document.querySelectorAll("#griglia .collega").forEach(el => {
 
-        let el =
-        document.getElementById(
-            "c_" + nome
-        );
+        const s = stato[el.dataset.nome];
 
-        el.className =
-        "collega";
+        el.className = "collega";
 
-        if(stato[nome] == 0){
-
-            el.classList.add(
-                "assente"
-            );
-
+        if(s === 0) el.classList.add("assente");
+        if(s === 1) el.classList.add("presente");
+        if(s === 2){
+            el.classList.add("autista");
+            autistaScelto = true;
         }
-
-        if(stato[nome] == 1){
-
-            el.classList.add(
-                "presente"
-            );
-
-        }
-
-        if(stato[nome] == 2){
-
-            el.classList.add(
-                "autista"
-            );
-
-            autistaRosso = true;
-        }
-
     });
 
     suggerisci();
 
-    document
-    .getElementById("salva")
-    .disabled =
-    !autistaRosso;
+    $("salva").disabled = !autistaScelto || occupato;
 }
+
+/* ============================================================
+   LOGICA DI SUGGERIMENTO
+   Suggerisce, tra i presenti di oggi, chi ha la percentuale
+   piu' bassa di guide rispetto alle PROPRIE presenze.
+   A parita' di percentuale: chi ha guidato meno di recente.
+   Chi non ha ancora presenze conta come 0%.
+   ============================================================ */
 
 function suggerisci(){
 
-    let candidati = [];
+    const candidati = [];
 
-    Object.keys(stato)
-    .forEach(nome=>{
+    Object.keys(stato).forEach(nome => {
 
         if(stato[nome] > 0){
 
-            const presenze =
-            statistiche[nome].presenze || 0;
-
-            const guide =
-            statistiche[nome].guide || 0;
-
-            if(presenze === 0){
-                return;
-            }
+            const presenze = statistiche[nome].presenze || 0;
+            const guide    = statistiche[nome].guide || 0;
 
             candidati.push({
-
-                nome:nome,
-
-                percentuale:
-                guide / presenze,
-
-                ultima:
-                statistiche[nome]
-                .ultimaGuida || ""
-
+                nome: nome,
+                percentuale: presenze > 0 ? guide / presenze : 0,
+                ultima: statistiche[nome].ultimaGuida || ""
             });
-
         }
-
     });
 
-    document
-    .querySelectorAll(".collega")
-    .forEach(x =>
-        x.classList.remove(
-            "suggerito"
-        )
-    );
+    document.querySelectorAll("#griglia .collega").forEach(el => {
+        el.classList.remove("suggerito");
+    });
 
     if(candidati.length === 0){
+        $("suggerimento").innerText = "";
         return;
     }
 
-    candidati.sort((a,b)=>{
+    candidati.sort((a,b) => {
 
-        if(
-            a.percentuale !==
-            b.percentuale
-        ){
-
-            return (
-                a.percentuale -
-                b.percentuale
-            );
-
+        if(Math.abs(a.percentuale - b.percentuale) > 1e-9){
+            return a.percentuale - b.percentuale;
         }
 
-        return a.ultima.localeCompare(
-            b.ultima
-        );
-
+        return a.ultima.localeCompare(b.ultima);
     });
 
-    const migliore =
-    candidati[0];
+    const migliore = candidati[0];
 
-    document
-    .getElementById(
-        "c_" + migliore.nome
-    )
-    .classList.add(
-        "suggerito"
-    );
+    document.querySelectorAll("#griglia .collega").forEach(el => {
+        if(el.dataset.nome === migliore.nome){
+            el.classList.add("suggerito");
+        }
+    });
 
+    $("suggerimento").innerText = "👉 Tocca a: " + migliore.nome;
 }
-document
-.getElementById("salva")
-.addEventListener(
-"click",
-salvaGiornata
-);
-    
-document
-.getElementById(
-    "btnAggiungiCollega"
-)
-.addEventListener(
-    "click",
-    aggiungiCollega
-);
 
-document
-.getElementById(
-    "scaricaStorico"
-)
-.addEventListener(
-    "click",
-    scaricaStorico
-);
+/* ============================================================
+   SALVATAGGIO / MODIFICA GIORNATA
+   ============================================================ */
 
 async function salvaGiornata(){
 
-    let presenti = [];
+    if(occupato) return;
 
+    const presenti = [];
     let autista = null;
 
-    Object.keys(stato)
-    .forEach(nome=>{
-
-        if(stato[nome] > 0){
-
-            presenti.push(nome);
-
-        }
-
-        if(stato[nome] === 2){
-
-            autista = nome;
-
-        }
-
+    Object.keys(stato).forEach(nome => {
+        if(stato[nome] > 0) presenti.push(nome);
+        if(stato[nome] === 2) autista = nome;
     });
 
     if(!autista){
-
-        alert(
-        "Seleziona un conducente"
-        );
-
+        alert("Seleziona un conducente");
         return;
     }
 
-    const storico =
-    await fetch(
-        API + "?action=storico"
-    ).then(r=>r.json());
+    const data = $("data").value;
 
-const dataSelezionata =
-document
-.getElementById("data")
-.value;
-
-    console.log(storico);
-
-const esisteGia =
-storico.some(x => {
-
-    const dataStorico =
-    new Date(x.data)
-    .toLocaleDateString(
-        "sv-SE"
-    );
-
-    console.log(
-    dataStorico,
-    dataSelezionata
-    );
-    
-    return (
-        dataStorico ===
-        dataSelezionata
-    );
-
-});
-
-if(esisteGia){
-
-    alert(
-        "⚠️ Esiste già una giornata registrata per questa data."
-    );
-
-    return;
-}
-    
-    try{
-
-        await fetch(
-            API,
-            {
-                method:"POST",
-
-                body:JSON.stringify({
-
-                    tipo:"salvaTurno",
-
-                    data:
-                    document
-                    .getElementById("data")
-                    .value,
-
-                    presenti:
-
-                    presenti,
-
-                    autista:
-
-                    autista
-
-                })
-
-            }
-        );
-
-alert(
-"Giornata salvata"
-);
-
-const r =
-await fetch(
-    API + "?action=bootstrap"
-).then(x=>x.json());
-
-statistiche  = r.statistiche;
-storicoCache = r.storico;
-totaleGiornate = r.storico.length;
-
-stato = {};
-
-await aggiornaDashboard();
-
-creaGriglia();
-
-mostraStoricoDaCache();
-
-
-document
-.getElementById("salva")
-.disabled = true;
-
-}
-
-catch(err){
-
-    alert(
-    "Errore durante il salvataggio"
-    );
-
-    console.error(err);
-
-}
-
-}
-
-    function mostraStoricoDaCache(){
-
-    let html = "";
-
-    storicoCache
-    .slice()
-    .reverse()
-    .forEach(r=>{
-
-        const dataOriginale =
-        new Date(r.data);
-
-        const dataFormattata =
-        dataOriginale.toLocaleDateString(
-            "it-IT"
-        );
-
-        html += `
-      <div class="rigaStorico">
-
-<b>${dataFormattata}</b>
-
-<br>
-
-Presenti:
-${r.presenti.join(", ")}
-
-<br>
-
-Autista:
-${r.autista}
-
-<br><br>
-
-${
-
-isAdmin
-
-?
-
-`
-
-<button
-onclick="modificaTurno('${r.id}')"
-style="background:#f59e0b;margin-right:10px;">
-
-✏️ Modifica
-
-</button>
-
-<button
-onclick="eliminaTurno('${r.id}')"
-style="background:#dc3545;">
-
-🗑 Elimina
-
-</button>
-
-`
-
-:
-
-""
-
-}
-
-</div>
-
-`;
-
-    });
-
-    if(html===""){
-
-        html =
-        "Nessuna giornata registrata";
-
-    }
-
-    document
-    .getElementById("storico")
-    .innerHTML = html;
-
-}
-    
-async function eliminaTurno(id){
-
-    const conferma =
-    confirm(
-
-      "Eliminare questa giornata?"
-
-    );
-
-    if(!conferma){
-
+    if(!data){
+        alert("Seleziona una data");
         return;
-
     }
+
+    const esisteGia = storicoCache.some(x =>
+        x.data === data && x.id !== modificaCorrente
+    );
+
+    if(esisteGia){
+        alert("⚠️ Esiste già una giornata registrata per questa data.");
+        return;
+    }
+
+    occupato = true;
+    $("salva").disabled = true;
 
     try{
 
-        await fetch(
-            API,
-            {
-                method:"POST",
+        const payload = modificaCorrente
+            ? { tipo:"modificaTurno", id:modificaCorrente,
+                data:data, presenti:presenti, autista:autista }
+            : { tipo:"salvaTurno",
+                data:data, presenti:presenti, autista:autista };
 
-                body: JSON.stringify({ tipo:"eliminaTurno", id: id })  // id adesso è stringa
+        const res = await post(payload);
 
-                    tipo:"eliminaTurno",
+        if(res && res.success === false){
+            alert("Errore: " + (res.errore || "salvataggio non riuscito"));
+        }else{
+            alert(modificaCorrente ? "Modifiche salvate" : "Giornata salvata");
+            modificaCorrente = null;
+            $("data").value = oggi();
+        }
 
-                    id:id
+        await avvia();
 
-                })
-
-            }
-        );
-
-        alert(
-        "Giornata eliminata"
-        );
-
-        statistiche =
-        await fetch(
-            API + "?action=statistiche"
-        ).then(r=>r.json());
-
-        await aggiornaDashboard();
-
-        creaGriglia();
-
-        mostraStoricoDaCache();
-
-    }
-
-    catch(err){
-
-        alert(
-        "Errore eliminazione"
-        );
+    }catch(err){
 
         console.error(err);
+        alert("Errore durante il salvataggio");
 
+    }finally{
+
+        occupato = false;
+        aggiorna();
     }
-
 }
 
-    async function modificaTurno(id){
+function modificaTurno(id){
 
-    const storico =
-    await fetch(
-        API + "?action=storico"
-    ).then(r=>r.json());
+    const turno = storicoCache.find(x => x.id === id);
 
-    const turno =
-    storico.find(
-        x => x.id == id
-    );
-
-    if(!turno){
-        return;
-    }
+    if(!turno) return;
 
     modificaCorrente = id;
 
-    document
-    .querySelector("details")
-    .open = true;
+    $("data").value = turno.data;
 
-   const dataOriginale =
-new Date(turno.data);
+    creaGriglia();
 
-const yyyy =
-dataOriginale.getUTCFullYear();
+    (turno.presenti || []).forEach(nome => {
+        if(nome in stato) stato[nome] = 1;
+    });
 
-const mm =
-String(
-    dataOriginale.getUTCMonth() + 1
-).padStart(2,"0");
+    if(turno.autista in stato){
+        stato[turno.autista] = 2;
+    }
 
-const dd =
-String(
-    dataOriginale.getUTCDate()
-).padStart(2,"0");
+    aggiorna();
+    aggiornaInterfacciaModifica();
 
-document
-.getElementById(
-    "dataStorico"
-).value =
-`${yyyy}-${mm}-${dd}`;
-
-    preparaStorico();
-
-    setTimeout(()=>{
-
-        turno.presenti
-        .forEach(nome=>{
-
-            statoStorico[nome] = 1;
-
-        });
-
-        statoStorico[
-            turno.autista
-        ] = 2;
-
-        aggiornaStorico();
-
-        const btn =
-        document.querySelector(
-            "#grigliaStorico button"
-        );
-
-        if(btn){
-
-            btn.innerText =
-            "💾 Salva modifiche";
-
-        }
-
-    },100);
-
+    window.scrollTo({ top:0, behavior:"smooth" });
 }
 
-async function caricaColleghiAdmin(){
+function annullaModifica(){
 
-    const colleghi =
-    await fetch(
-        API + "?action=colleghi"
-    ).then(r=>r.json());
+    modificaCorrente = null;
+
+    $("data").value = oggi();
+
+    creaGriglia();
+    aggiornaInterfacciaModifica();
+}
+
+function aggiornaInterfacciaModifica(){
+
+    const inModifica = modificaCorrente !== null;
+
+    $("salva").innerText =
+        inModifica ? "💾 Salva modifiche" : "✅ Salva Giornata";
+
+    $("annullaModifica").style.display =
+        inModifica ? "block" : "none";
+
+    const banner = $("bannerModifica");
+
+    if(inModifica){
+        const turno = storicoCache.find(x => x.id === modificaCorrente);
+        banner.style.display = "block";
+        banner.innerText =
+            "✏️ Stai modificando la giornata del " +
+            formatData(turno ? turno.data : $("data").value);
+    }else{
+        banner.style.display = "none";
+    }
+}
+
+async function eliminaTurno(id){
+
+    if(!confirm("Eliminare questa giornata?")) return;
+
+    try{
+
+        const res = await post({ tipo:"eliminaTurno", id:id });
+
+        if(res && res.success === false){
+            alert("Errore: " + (res.errore || "eliminazione non riuscita"));
+        }else{
+            alert("Giornata eliminata");
+        }
+
+        if(modificaCorrente === id) modificaCorrente = null;
+
+        await avvia();
+
+    }catch(err){
+
+        console.error(err);
+        alert("Errore eliminazione");
+    }
+}
+
+/* ============================================================
+   STORICO
+   ============================================================ */
+
+function mostraStorico(){
 
     let html = "";
 
-    colleghi.forEach(c=>{
+    storicoCache.slice().reverse().forEach(r => {
 
         html += `
+        <div class="rigaStorico">
 
-        <div class="collegaAdmin">
+            <b>${formatData(r.data)}</b>
 
-            <span>
+            <br>
 
-                ${c.nome}
+            Presenti: ${esc((r.presenti || []).join(", "))}
 
-            </span>
+            <br>
 
-            <button
+            Autista: ${esc(r.autista)}
 
-                onclick="eliminaCollega('${c.nome}')"
+            <br><br>
 
-                style="background:#dc3545;">
+            ${
+                isAdmin
+                ? `
+                <button class="btnModifica"
+                        data-azione="modifica"
+                        data-id="${esc(r.id)}">
+                    ✏️ Modifica
+                </button>
 
-                🗑
-
-            </button>
+                <button class="btnElimina"
+                        data-azione="elimina"
+                        data-id="${esc(r.id)}">
+                    🗑 Elimina
+                </button>
+                `
+                : ""
+            }
 
         </div>
-
         `;
-
     });
 
-    document
-    .getElementById(
-        "listaColleghiAdmin"
-    )
-    .innerHTML = html;
-
-}
-
-async function aggiungiCollega(){
-
-    const nome =
-    document
-    .getElementById(
-        "nuovoCollega"
-    )
-    .value
-    .trim();
-
-    if(!nome){
-
-        alert(
-        "Inserire un nome"
-        );
-
-        return;
+    if(html === ""){
+        html = "Nessuna giornata registrata";
     }
 
-    await fetch(
-        API,
-        {
-            method:"POST",
-
-            body:JSON.stringify({
-
-                tipo:
-                "aggiungiCollega",
-
-                nome:
-                nome
-
-            })
-
-        }
-    );
-
-    document
-    .getElementById(
-        "nuovoCollega"
-    ).value = "";
-
-    await caricaColleghiAdmin();
-
-    statistiche =
-    await fetch(
-        API + "?action=statistiche"
-    ).then(r=>r.json());
-
-    await aggiornaDashboard();
-
-    creaGriglia();
-    
-    alert(
-    "Collega aggiunto"
-    );
-
+    $("storico").innerHTML = html;
 }
 
-async function eliminaCollega(nome){
+$("storico").addEventListener("click", e => {
 
-    const conferma =
-    confirm(
+    const btn = e.target.closest("button[data-azione]");
 
-    "Eliminare " +
-    nome +
-    " ?"
+    if(!btn) return;
 
-    );
+    if(btn.dataset.azione === "modifica") modificaTurno(btn.dataset.id);
+    if(btn.dataset.azione === "elimina")  eliminaTurno(btn.dataset.id);
+});
 
-    if(!conferma){
+function scaricaStorico(){
 
-        return;
+    const righe = [["Data", "Presenti", "Autista"]];
 
-    }
-
-    await fetch(
-        API,
-        {
-            method:"POST",
-
-            body:JSON.stringify({
-
-                tipo:
-                "eliminaCollega",
-
-                nome:
-                nome
-
-            })
-
-        }
-    );
-
-   await caricaColleghiAdmin();
-
-    statistiche =
-    await fetch(
-        API + "?action=statistiche"
-    ).then(r=>r.json());
-
-    await aggiornaDashboard();
-
-    creaGriglia();
-    
-    alert(
-    "Collega eliminato"
-    );
-
-}
-
-function mostraFunzioniAdmin(){
-
-    document
-    .getElementById(
-        "areaAdmin"
-    )
-    .style.display =
-    "block";
-
-}
-
-function loginAdmin(){
-
-    const pwd =
-    prompt(
-        "Password amministratore"
-    );
-
-    if(
-        pwd ===
-        PASSWORD_ADMIN
-    ){
-
-        localStorage.setItem(
-            "carpool_admin",
-            "true"
-        );
-
-        isAdmin = true;
-
-        mostraFunzioniAdmin();
-
-        alert(
-            "Modalità amministratore attivata"
-        );
-
-        location.reload();
-
-    }
-
-    else{
-
-        alert(
-            "Password errata"
-        );
-
-    }
-
-}
-
-function logoutAdmin(){
-
-    localStorage.removeItem(
-        "carpool_admin"
-    );
-
-    location.reload();
-
-}
-
-async function aggiornaDashboard(){
-
-    const storico =
-    await fetch(
-        API + "?action=storico"
-    ).then(r=>r.json());
-
-totaleGiornate =
-storico.length;
-
-document
-.getElementById(
-    "dashGiornate"
-).innerText =
-totaleGiornate;
-
-    if(storico.length){
-
-        document
-        .getElementById(
-            "dashUltimo"
-        ).innerText =
-        storico[
-            storico.length - 1
-        ].autista;
-
-    }else{
-
-        document
-        .getElementById(
-            "dashUltimo"
-        ).innerText =
-        "-";
-
-    }
-
-}
-
-async function scaricaStorico(){
-
-    const storico =
-    await fetch(
-        API + "?action=storico"
-    ).then(r=>r.json());
-
-    let contenuto = [];
-
-    contenuto.push([
-        "Data",
-        "Presenti",
-        "Autista"
-    ]);
-
-    storico.forEach(r=>{
-
-        const data =
-        new Date(r.data)
-        .toLocaleDateString(
-            "it-IT"
-        );
-
-        contenuto.push([
-            data,
-            r.presenti.join(", "),
+    storicoCache.forEach(r => {
+        righe.push([
+            formatData(r.data),
+            (r.presenti || []).join(", "),
             r.autista
         ]);
-
     });
 
     let html = `
     <html>
-    <head>
-    <meta charset="UTF-8">
-    </head>
+    <head><meta charset="UTF-8"></head>
     <body>
     <table border="1">
     `;
 
-    contenuto.forEach(riga=>{
-
+    righe.forEach(riga => {
         html += "<tr>";
-
-        riga.forEach(cella=>{
-
-            html +=
-            "<td>" +
-            cella +
-            "</td>";
-
+        riga.forEach(cella => {
+            html += "<td>" + esc(cella) + "</td>";
         });
-
         html += "</tr>";
-
     });
 
     html += `
@@ -1312,32 +800,155 @@ async function scaricaStorico(){
     </html>
     `;
 
-    const blob =
-    new Blob(
-        [html],
-        {
-            type:
-            "application/vnd.ms-excel"
-        }
-    );
+    const blob = new Blob([html], { type:"application/vnd.ms-excel" });
 
-    const link =
-    document.createElement(
-        "a"
-    );
-
-    link.href =
-    URL.createObjectURL(
-        blob
-    );
-
-    link.download =
-    "storico_car_pool.xls";
-
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "storico_car_pool.xls";
     link.click();
-
 }
-    
+
+/* ============================================================
+   GESTIONE COLLEGHI (ADMIN)
+   ============================================================ */
+
+function caricaColleghiAdmin(){
+
+    if(!isAdmin) return;
+
+    let html = "";
+
+    colleghiLista.forEach(nome => {
+
+        html += `
+        <div class="collegaAdmin">
+
+            <span>${esc(nome)}</span>
+
+            <button class="btnElimina"
+                    data-nome="${esc(nome)}">
+                🗑
+            </button>
+
+        </div>
+        `;
+    });
+
+    if(html === "") html = "Nessun collega";
+
+    $("listaColleghiAdmin").innerHTML = html;
+}
+
+$("listaColleghiAdmin").addEventListener("click", e => {
+
+    const btn = e.target.closest("button[data-nome]");
+
+    if(btn) eliminaCollega(btn.dataset.nome);
+});
+
+async function aggiungiCollega(){
+
+    const nome = $("nuovoCollega").value.trim();
+
+    if(!nome){
+        alert("Inserire un nome");
+        return;
+    }
+
+    try{
+
+        const res = await post({ tipo:"aggiungiCollega", nome:nome });
+
+        if(res && res.success === false){
+            alert("Errore: " + (res.errore || "aggiunta non riuscita"));
+            return;
+        }
+
+        $("nuovoCollega").value = "";
+
+        await avvia();
+
+        alert("Collega aggiunto");
+
+    }catch(err){
+
+        console.error(err);
+        alert("Errore durante l'aggiunta");
+    }
+}
+
+async function eliminaCollega(nome){
+
+    if(!confirm("Eliminare " + nome + " ?")) return;
+
+    try{
+
+        await post({ tipo:"eliminaCollega", nome:nome });
+
+        await avvia();
+
+        alert("Collega eliminato");
+
+    }catch(err){
+
+        console.error(err);
+        alert("Errore durante l'eliminazione");
+    }
+}
+
+/* ============================================================
+   ADMIN: LOGIN / LOGOUT
+   ============================================================ */
+
+function verificaAdmin(){
+
+    $("areaAdmin").style.display = isAdmin ? "block" : "none";
+
+    $("data").disabled = !isAdmin;
+}
+
+function loginAdmin(){
+
+    const pwd = prompt("Password amministratore");
+
+    if(pwd === null) return;
+
+    if(pwd === PASSWORD_ADMIN){
+
+        localStorage.setItem("carpool_admin", "true");
+
+        alert("Modalità amministratore attivata");
+
+        location.reload();
+
+    }else{
+
+        alert("Password errata");
+    }
+}
+
+function logoutAdmin(){
+
+    localStorage.removeItem("carpool_admin");
+
+    location.reload();
+}
+
+/* ============================================================
+   COLLEGAMENTO EVENTI E AVVIO
+   ============================================================ */
+
+$("salva").addEventListener("click", salvaGiornata);
+$("annullaModifica").addEventListener("click", annullaModifica);
+$("btnAggiungiCollega").addEventListener("click", aggiungiCollega);
+$("scaricaStorico").addEventListener("click", scaricaStorico);
+$("btnLogin").addEventListener("click", loginAdmin);
+$("btnLogout").addEventListener("click", logoutAdmin);
+
+$("data").value = oggi();
+
+verificaAdmin();
+
 avvia();
 
 </script>
