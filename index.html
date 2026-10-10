@@ -133,7 +133,6 @@ details summary{ cursor:pointer; font-size:18px; font-weight:bold; }
     <button id="scaricaStorico">📥 Scarica storico (.xls)</button>
     <br><br>
     
-    <!-- Pannello Modifica Dinamico Interpato Correttamente -->
     <div id="areaModificaContenitore" class="sezioneModifica" style="display:none;">
         <h4 style="margin-top:0;">✏️ Modifica Turno Selezionato</h4>
         <p>Data Storico: <input type="date" id="dataStorico"></p>
@@ -162,7 +161,7 @@ details summary{ cursor:pointer; font-size:18px; font-weight:bold; }
 </p>
 
 <script>
-const API = "https://script.google.com/macros/s/AKfycbwKI_apMrhjAWfWXWzioK7qBuMSgSFx93LCqkO9qiksluAZUFZ9cPb3jVMbN1U-B3oZBQ/exec";
+const API = "https://google.com";
 const PASSWORD_ADMIN = "CarPool2026";
 
 let isAdmin = localStorage.getItem("carpool_admin") === "true";
@@ -172,7 +171,7 @@ let statoStorico = {};
 let modificaCorrente = null;
 let totaleGiornate = 0;
 
-// Corretta l'assegnazione iniziale per impostare la stringa data pulita nel campo data
+// Corretto l'assegnamento dell'indice stringa per l'input date
 document.getElementById("data").value = new Date().toISOString().split("T")[0];
 
 function verificaAdmin(){
@@ -257,7 +256,7 @@ function suggerisci(){
             
             candidati.push({
                 nome: nome,
-                percentuale: guide / presenze, // Calcolo basato sulle presenze effettive
+                percentuale: guide / presenze,
                 ultima: statistiche[nome].ultimaGuida || ""
             });
         }
@@ -266,10 +265,9 @@ function suggerisci(){
     document.querySelectorAll(".collega").forEach(x => x.classList.remove("suggerito"));
     if(candidati.length === 0){ return; }
 
-    // Algoritmo meritocratico di ordinamento
     candidati.sort((a,b)=>{
         if(a.percentuale !== b.percentuale){ return a.percentuale - b.percentuale; }
-        return a.ultima.localeCompare(b.ultima); // In caso di parità, chi ha guidato più tempo fa
+        return a.ultima.localeCompare(b.ultima);
     });
 
     const migliore = candidati[0];
@@ -329,3 +327,8 @@ async function salvaGiornata(){
 async function caricaStorico(){
     try{
         const storico = await fetch(API + "?action=storico").then(r=>r.json());
+        let html = "";
+        storico.slice().reverse().forEach(r=>{
+            const dataFormattata = new Date(r.data).toLocaleDateString("it-IT");
+            html += `
+            <div class="rigaStorico">
