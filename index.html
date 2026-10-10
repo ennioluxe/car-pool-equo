@@ -2,31 +2,23 @@
 <html lang="it">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-
 <title>A CHI TOCCA?</title>
-
 <link rel="icon" type="image/png" href="favicon.png">
-
 <link rel="apple-touch-icon" href="favicon.png">
-
 <link rel="manifest" href="manifest.json">
 
 <style>
-
 body{
     font-family:Segoe UI,Arial,sans-serif;
     background:#f4f6f9;
     margin:20px;
 }
-
 h1{
     text-align:center;
     color:#003366;
 }
-
 .card{
     background:white;
     border-radius:12px;
@@ -34,20 +26,17 @@ h1{
     margin-bottom:15px;
     box-shadow:0 2px 6px rgba(0,0,0,.15);
 }
-
 .grid{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:10px;
 }
-
 .dashboard{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:10px;
     margin-bottom:15px;
 }
-
 .boxDash{
     background:white;
     border-radius:12px;
@@ -55,17 +44,14 @@ h1{
     text-align:center;
     box-shadow:0 2px 6px rgba(0,0,0,.15);
 }
-
 .titoloDash{
     font-size:12px;
     color:#666;
 }
-
 .valoreDash{
     font-size:22px;
     font-weight:bold;
 }
-
 .collega{
     border:3px solid #ccc;
     border-radius:12px;
@@ -75,36 +61,12 @@ h1{
     user-select:none;
     transition:.2s;
 }
-
-.assente{
-    background:white;
-}
-
-.presente{
-    background:#28a745;
-    color:white;
-}
-
-.autista{
-    background:#dc3545;
-    color:white;
-}
-
-.suggerito{
-    border-color:red !important;
-}
-
-.nome{
-    font-size:22px;
-    font-weight:bold;
-}
-
-.punti{
-    margin-top:10px;
-    font-size:15px;
-    line-height:1.5;
-}
-
+.assente{ background:white; }
+.presente{ background:#28a745; color:white; }
+.autista{ background:#dc3545; color:white; }
+.suggerito{ border-color:red !important; }
+.nome{ font-size:22px; font-weight:bold; }
+.punti{ margin-top:10px; font-size:15px; line-height:1.5; }
 button{
     padding:12px;
     border:none;
@@ -113,17 +75,8 @@ button{
     color:white;
     cursor:pointer;
 }
-
-#salva{
-    width:100%;
-    margin-top:20px;
-    font-size:18px;
-}
-
-#salva:disabled{
-    background:#999;
-}
-
+#salva{ width:100%; margin-top:20px; font-size:18px; }
+#salva:disabled{ background:#999; }
 input:disabled{
     background:#e9ecef;
     color:#495057;
@@ -131,25 +84,9 @@ input:disabled{
     cursor:not-allowed;
     opacity:1;
 }
-    
-details summary{
-    cursor:pointer;
-    font-size:18px;
-    font-weight:bold;
-}
-
-.rigaStorico{
-    border-bottom:1px solid #ddd;
-    padding:8px 0;
-}
-
-#grigliaStorico{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-top:10px;
-}
-
+details summary{ cursor:pointer; font-size:18px; font-weight:bold; }
+.rigaStorico{ border-bottom:1px solid #ddd; padding:8px 0; }
+#grigliaStorico{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
 .collegaAdmin{
     display:flex;
     justify-content:space-between;
@@ -157,9 +94,15 @@ details summary{
     padding:8px;
     border-bottom:1px solid #ddd;
 }
-
+.sezioneModifica {
+    background: #fef3c7;
+    border: 2px dashed #f59e0b;
+    padding: 15px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
 </style>
-
 </head>
 
 <body>
@@ -189,14 +132,15 @@ details summary{
     <h3>Storico registrato</h3>
     <button id="scaricaStorico">📥 Scarica storico (.xls)</button>
     <br><br>
-
-    <!-- Contenitore per la modifica dei turni inserito nello storico -->
-    <div id="areaModificaStorico" style="display:none; background:#fffdbf; padding:15px; border:2px dashed #f59e0b; border-radius:12px; margin-bottom:15px; color:#333;">
-        <h4 style="margin-top:0;">✏️ Modifica Giornata</h4>
-        <p>Data: <input type="date" id="dataStorico"></p>
+    
+    <!-- Pannello Modifica Dinamico Interpato Correttamente -->
+    <div id="areaModificaContenitore" class="sezioneModifica" style="display:none;">
+        <h4 style="margin-top:0;">✏️ Modifica Turno Selezionato</h4>
+        <p>Data Storico: <input type="date" id="dataStorico"></p>
         <div id="grigliaStorico"></div>
-        <button id="btnSalvaModifica" style="background:#f59e0b; width:100%; margin-top:15px; font-weight:bold;">💾 Salva modifiche</button>
-        <button type="button" onclick="annullaModifica()" style="background:#6c757d; width:100%; margin-top:5px;">Annulla</button>
+        <br>
+        <button id="btnSalvaModifica" style="background:#f59e0b; width:100%;">💾 Salva modifiche</button>
+        <button type="button" onclick="annullaModifica()" style="background:#6b7280; width:100%; margin-top:5px;">Annulla</button>
     </div>
 
     <div id="storico">Caricamento storico...</div>
@@ -224,11 +168,11 @@ const PASSWORD_ADMIN = "CarPool2026";
 let isAdmin = localStorage.getItem("carpool_admin") === "true";
 let statistiche = {};
 let stato = {};
-let statoStorico = {}; 
+let statoStorico = {};
 let modificaCorrente = null;
 let totaleGiornate = 0;
 
-// RISOLTO: Inserito l'indice [0] per passare una stringa valida al campo input date
+// Corretta l'assegnazione iniziale per impostare la stringa data pulita nel campo data
 document.getElementById("data").value = new Date().toISOString().split("T")[0];
 
 function verificaAdmin(){
@@ -242,21 +186,16 @@ function verificaAdmin(){
 }
 
 async function avvia(){
-    console.time("AVVIO");
     try {
         statistiche = await fetch(API + "?action=statistiche").then(r=>r.json());
         await aggiornaDashboard();
         creaGriglia();
         await caricaStorico();
-
-        if(isAdmin){
-            await caricaColleghiAdmin();
-        }
+        if(isAdmin){ await caricaColleghiAdmin(); }
         verificaAdmin();
     } catch(e) {
-        console.error("Errore nel caricamento dei dati dall'API:", e);
+        console.error("Errore inizializzazione:", e);
     }
-    console.timeEnd("AVVIO");
 }
 
 function creaGriglia(){
@@ -275,60 +214,50 @@ function creaGriglia(){
         <div class="collega assente" id="c_${nome}" onclick="clic('${nome}')">
             <div class="nome">${nome}</div>
             <div class="punti">
-                👥 Presenze: ${presenze} (${percPresenze}%)
-                <br><br>
+                👥 Presenze: ${presenze} (${percPresenze}%)<br><br>
                 🚗 Guide: <strong style="color:#d62828; font-size:20px;">${guide} (${percGuide}%)</strong>
             </div>
         </div>
         `;
     });
-
     document.getElementById("griglia").innerHTML = html;
 }
 
 function clic(nome){
     let attuale = stato[nome];
-    if(attuale === 0){
-        stato[nome] = 1;
-    } else if(attuale === 1){
-        Object.keys(stato).forEach(n=>{
-            if(stato[n]===2){ stato[n]=1; }
-        });
+    if(attuale === 0){ stato[nome] = 1; }
+    else if(attuale === 1){
+        Object.keys(stato).forEach(n=>{ if(stato[n]===2){ stato[n]=1; } });
         stato[nome] = 2;
-    } else {
-        stato[nome] = 0;
-    }
+    }else{ stato[nome] = 0; }
     aggiorna();
 }
 
 function aggiorna(){
     let autistaRosso = false;
-
     Object.keys(stato).forEach(nome=>{
         let el = document.getElementById("c_" + nome);
         if(!el) return;
         el.className = "collega";
-
         if(stato[nome] == 0){ el.classList.add("assente"); }
         if(stato[nome] == 1){ el.classList.add("presente"); }
         if(stato[nome] == 2){ el.classList.add("autista"); autistaRosso = true; }
     });
-
     suggerisci();
     document.getElementById("salva").disabled = !autistaRosso;
 }
 
 function suggerisci(){
     let candidati = [];
-
     Object.keys(stato).forEach(nome=>{
         if(stato[nome] > 0){
             const presenze = statistiche[nome].presenze || 0;
             const guide = statistiche[nome].guide || 0;
             if(presenze === 0){ return; }
+            
             candidati.push({
                 nome: nome,
-                percentuale: guide / presenze,
+                percentuale: guide / presenze, // Calcolo basato sulle presenze effettive
                 ultima: statistiche[nome].ultimaGuida || ""
             });
         }
@@ -337,15 +266,15 @@ function suggerisci(){
     document.querySelectorAll(".collega").forEach(x => x.classList.remove("suggerito"));
     if(candidati.length === 0){ return; }
 
+    // Algoritmo meritocratico di ordinamento
     candidati.sort((a,b)=>{
         if(a.percentuale !== b.percentuale){ return a.percentuale - b.percentuale; }
-        return a.ultima.localeCompare(b.ultima);
+        return a.ultima.localeCompare(b.ultima); // In caso di parità, chi ha guidato più tempo fa
     });
 
-    // RISOLTO: Inserito l'indice [0] per individuare correttamente l'oggetto del candidato ideale
     const migliore = candidati[0];
     const elSuggerito = document.getElementById("c_" + migliore.nome);
-    if(elSuggerito) { elSuggerito.classList.add("suggerito"); }
+    if(elSuggerito) elSuggerito.classList.add("suggerito");
 }
 
 document.getElementById("salva").addEventListener("click", salvaGiornata);
@@ -356,7 +285,6 @@ document.getElementById("btnSalvaModifica").addEventListener("click", salvaModif
 async function salvaGiornata(){
     let presenti = [];
     let autista = null;
-
     Object.keys(stato).forEach(nome=>{
         if(stato[nome] > 0){ presenti.push(nome); }
         if(stato[nome] === 2){ autista = nome; }
@@ -392,5 +320,12 @@ async function salvaGiornata(){
         creaGriglia();
         caricaStorico();
         document.getElementById("salva").disabled = true;
-    } catch(err) {
+    }catch(err){
         alert("Errore durante il salvataggio");
+        console.error(err);
+    }
+}
+
+async function caricaStorico(){
+    try{
+        const storico = await fetch(API + "?action=storico").then(r=>r.json());
