@@ -735,10 +735,14 @@ alert(
 "Giornata salvata"
 );
 
-statistiche =
+const r =
 await fetch(
-    API + "?action=statistiche"
-).then(r=>r.json());
+    API + "?action=bootstrap"
+).then(x=>x.json());
+
+statistiche  = r.statistiche;
+storicoCache = r.storico;
+totaleGiornate = r.storico.length;
 
 stato = {};
 
@@ -746,7 +750,7 @@ await aggiornaDashboard();
 
 creaGriglia();
 
-caricaStorico();
+mostraStoricoDaCache();
 
 
 document
@@ -851,108 +855,6 @@ style="background:#dc3545;">
     .innerHTML = html;
 
 }
-
-    try{
-
-        const storico =
-        await fetch(
-            API + "?action=storico"
-        ).then(r=>r.json());
-
-        let html = "";
-
-        storico
-        .slice()
-        .reverse()
-        .forEach(r=>{
-
-            const dataOriginale =
-            new Date(r.data);
-            
-            const dataFormattata =
-            dataOriginale.toLocaleDateString(
-                "it-IT"
-            );
-
-            html += `
-
-          <div class="rigaStorico">
-
-   <b>${dataFormattata}</b>
-
-    <br>
-
-    Presenti:
-    ${r.presenti.join(", ")}
-
-    <br>
-
-    Autista:
-    ${r.autista}
-
-    <br><br>
-
-${
-
-isAdmin
-
-?
-
-`
-
-<button
-onclick="modificaTurno('${r.id}')"
-style="background:#f59e0b;margin-right:10px;">
-
-✏️ Modifica
-
-</button>
-
-<button
-onclick="eliminaTurno('${r.id}')"
-style="background:#dc3545;">
-
-🗑 Elimina
-
-</button>
-
-`
-
-:
-
-""
-
-}
-
-</div>
-
-`;
-
-        });
-
-        if(html===""){
-
-            html =
-            "Nessuna giornata registrata";
-
-        }
-
-        document
-        .getElementById("storico")
-        .innerHTML = html;
-
-    }
-
-    catch(err){
-
-        document
-        .getElementById("storico")
-        .innerHTML =
-        "Errore caricamento storico";
-
-    }
-
-}
     
 async function eliminaTurno(id){
 
@@ -1000,7 +902,7 @@ async function eliminaTurno(id){
 
         creaGriglia();
 
-        caricaStorico();
+        mostraStoricoDaCache();
 
     }
 
